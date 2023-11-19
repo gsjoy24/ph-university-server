@@ -1,5 +1,3 @@
-import { Schema, model, connect } from 'mongoose';
-
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -25,7 +23,7 @@ export type Student = {
   id: string;
   name: Username;
   gender: 'male' | 'female';
-  dateOfBirth: string;
+  dateOfBirth?: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -35,5 +33,5 @@ export type Student = {
   guardian: Guardian;
   localGuardian: LocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'inactive';
+  isActive: 'active' | 'blocked';
 };
