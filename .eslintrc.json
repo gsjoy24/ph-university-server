@@ -21,7 +21,7 @@
     "no-console": "warn",
     "no-undef": "error"
   },
-  "global": {
+  "globals": {
     "process": "readonly"
   }
 }
