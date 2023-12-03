@@ -10,7 +10,6 @@ const getAllStudent = async (
 ) => {
   try {
     const result = await StudentServices.getAllStudentsFromDB();
-    //! send response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -30,7 +29,6 @@ const getSingleStudent = async (
     const { studentId } = req.params;
     const result = await StudentServices.getSingleStudentsFromDB(studentId);
 
-    //! send response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -50,7 +48,6 @@ const deleteStudent = async (
     const { studentId } = req.params;
     const result = await StudentServices.deleteStudentsFromDB(studentId);
 
-    //! send response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
