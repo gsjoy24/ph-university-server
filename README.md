@@ -1,2 +1,3 @@
-### steps 
-route => validation middleware => controller => service
+### steps
+
+route ⇒ validation middleware ⇒ controller ⇒ service
