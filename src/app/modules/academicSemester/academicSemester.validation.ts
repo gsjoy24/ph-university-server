@@ -8,9 +8,9 @@ import {
 const createAcademicSemesterValidationSchema = zod.object({
   body: zod.object({
     name: zod.enum([...AcademicSemesterNames] as [string, ...string[]], {
-       required_error: 'Academic semester name is required',
+      required_error: 'Academic semester name is required',
     }),
-    year: zod.date({
+    year: zod.string({
       required_error: 'Academic semester year is required',
     }),
     code: zod.enum([...AcademicSemesterCodes] as [string, ...string[]], {
