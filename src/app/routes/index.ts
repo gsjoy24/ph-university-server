@@ -22,4 +22,4 @@ moduleRoutes.forEach(({ path, route }) => {
   router.use(path, route);
 });
 
-export default router; 
+export default router;
