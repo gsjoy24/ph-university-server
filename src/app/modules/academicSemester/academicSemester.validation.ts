@@ -25,6 +25,21 @@ const createAcademicSemesterValidationSchema = zod.object({
   }),
 });
 
+const updateAcademicSemesterValidationSchema = zod.object({
+  body: zod.object({
+    name: zod
+      .enum([...AcademicSemesterNames] as [string, ...string[]])
+      .optional(),
+    year: zod.string().optional(),
+    code: zod
+      .enum([...AcademicSemesterCodes] as [string, ...string[]])
+      .optional(),
+    startMonth: zod.enum([...Months] as [string, ...string[]]).optional(),
+    endMonth: zod.enum([...Months] as [string, ...string[]]).optional(),
+  }),
+});
+
 export const AcademicSemesterValidations = {
   createAcademicSemesterValidationSchema,
+  updateAcademicSemesterValidationSchema,
 };

@@ -91,8 +91,8 @@ const createStudentValidationSchema = z.object({
         invalid_type_error: 'Gender must be a string',
       }),
       dateOfBirth: z
-        .date({
-          invalid_type_error: 'Date of birth must be a date',
+        .string({
+          invalid_type_error: 'Date of birth must be a string',
         })
         .optional(),
       email: z
@@ -127,6 +127,10 @@ const createStudentValidationSchema = z.object({
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
       profileImg: z.string().url({ message: 'Invalid url' }).optional(),
+      admissionSemester: z.string({
+        required_error: 'Academic semester is required',
+        invalid_type_error: 'Academic semester must be a string',
+      }),
     }),
   }),
 });
