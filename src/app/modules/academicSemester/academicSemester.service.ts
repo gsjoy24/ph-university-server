@@ -27,9 +27,15 @@ const updateAcademicSemesterIntoDB = async (
   });
   return result;
 };
+
+const deleteAcademicSemesterFromDB = async (id: string) => {
+  const result = await AcademicSemester.findByIdAndDelete(id);
+  return result;
+};
 export const AcademicSemesterServices = {
   createAcademicSemesterIntoDB,
   getAllAcademicSemestersFromDB,
   getSingleAcademicSemesterFromDB,
   updateAcademicSemesterIntoDB,
+  deleteAcademicSemesterFromDB,
 };
