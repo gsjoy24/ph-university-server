@@ -100,7 +100,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     id: {
       type: String,
       required: [true, 'ID is required!'],
-      trim: true,
       unique: true,
     },
     user: {
@@ -137,8 +136,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     contactNo: {
       type: String,
       required: [true, 'Contact no is required!'],
-      trim: true,
-      unique: true,
     },
     emergencyContactNo: {
       type: String,

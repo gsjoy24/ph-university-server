@@ -6,6 +6,7 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateId } from './user.utils';
+
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a new user object
   const userData: Partial<TUser> = {};
