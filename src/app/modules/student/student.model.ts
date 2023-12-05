@@ -128,10 +128,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Email is required!'],
       trim: true,
       unique: true,
-      validate: {
-        validator: (value: string) => validator.isEmail(value),
-        message: '{VALUE} is not a valid email!',
-      },
     },
     contactNo: {
       type: String,
@@ -162,6 +158,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
       required: [true, 'Admission semester is required!'],
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+      required: [true, 'Academic department is required!'],
     },
     profileImg: { type: String },
     isDeleted: {
