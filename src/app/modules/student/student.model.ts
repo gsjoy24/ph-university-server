@@ -8,92 +8,107 @@ import {
   TUsername,
 } from './student.interface';
 
-const userNameSchema = new Schema<TUsername>({
-  firstName: {
-    type: String,
-    trim: true,
-    required: [true, 'First name is required!'],
-    maxlength: [20, 'First name can not have more than 20 characters.'],
-    validate: {
-      validator: function (value: string): boolean {
-        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-        return firstNameStr === value;
+const userNameSchema = new Schema<TUsername>(
+  {
+    firstName: {
+      type: String,
+      trim: true,
+      required: [true, 'First name is required!'],
+      maxlength: [20, 'First name can not have more than 20 characters.'],
+      validate: {
+        validator: function (value: string): boolean {
+          const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+          return firstNameStr === value;
+        },
+        message: '{VALUE} is not in capitalize format!',
       },
-      message: '{VALUE} is not in capitalize format!',
+    },
+    middleName: {
+      type: String,
+      trim: true,
+      maxlength: [20, 'Middle name can not have more than 20 characters.'],
+    },
+    lastName: {
+      type: String,
+      trim: true,
+      required: [true, 'Last name is required!'],
+      maxlength: [20, 'Last name can not have more than 20 characters.'],
+      validate: {
+        validator: (value: string) => validator.isAlpha(value),
+        message: '{VALUE} is not valid!',
+      },
     },
   },
-  middleName: {
-    type: String,
-    trim: true,
-    maxlength: [20, 'Middle name can not have more than 20 characters.'],
+  {
+    _id: false,
   },
-  lastName: {
-    type: String,
-    trim: true,
-    required: [true, 'Last name is required!'],
-    maxlength: [20, 'Last name can not have more than 20 characters.'],
-    validate: {
-      validator: (value: string) => validator.isAlpha(value),
-      message: '{VALUE} is not valid!',
+);
+
+const guardianSchema = new Schema<TGuardian>(
+  {
+    fatherName: {
+      type: String,
+      trim: true,
+      required: [true, "Father's name is required!"],
+    },
+    fatherOccupation: {
+      type: String,
+      trim: true,
+      required: [true, "Father's occupation is required!"],
+    },
+    fatherContactNo: {
+      type: String,
+      trim: true,
+      required: [true, "Father's contact no is required!"],
+    },
+    motherName: {
+      type: String,
+      trim: true,
+      required: [true, "Mother's name is required!"],
+    },
+    motherOccupation: {
+      type: String,
+      trim: true,
+      required: [true, "Mother's occupation is required!"],
+    },
+    motherContactNo: {
+      type: String,
+      trim: true,
+      required: [true, "Mother's contact no is required!"],
     },
   },
-});
+  {
+    _id: false,
+  },
+);
 
-const guardianSchema = new Schema<TGuardian>({
-  fatherName: {
-    type: String,
-    trim: true,
-    required: [true, "Father's name is required!"],
+const localGuardianSchema = new Schema<TLocalGuardian>(
+  {
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "Local guardian's name is required!"],
+    },
+    occupation: {
+      type: String,
+      trim: true,
+      required: [true, "Local guardian's occupation is required!"],
+    },
+    contactNo: {
+      type: String,
+      trim: true,
+      required: [true, "Local guardian's contact no is required!"],
+    },
+    address: {
+      type: String,
+      trim: true,
+      required: [true, "Local guardian's address is required!"],
+    },
   },
-  fatherOccupation: {
-    type: String,
-    trim: true,
-    required: [true, "Father's occupation is required!"],
+  {
+    _id: false,
   },
-  fatherContactNo: {
-    type: String,
-    trim: true,
-    required: [true, "Father's contact no is required!"],
-  },
-  motherName: {
-    type: String,
-    trim: true,
-    required: [true, "Mother's name is required!"],
-  },
-  motherOccupation: {
-    type: String,
-    trim: true,
-    required: [true, "Mother's occupation is required!"],
-  },
-  motherContactNo: {
-    type: String,
-    trim: true,
-    required: [true, "Mother's contact no is required!"],
-  },
-});
-
-const localGuardianSchema = new Schema<TLocalGuardian>({
-  name: {
-    type: String,
-    trim: true,
-    required: [true, "Local guardian's name is required!"],
-  },
-  occupation: {
-    type: String,
-    trim: true,
-    required: [true, "Local guardian's occupation is required!"],
-  },
-  contactNo: {
-    type: String,
-    trim: true,
-    required: [true, "Local guardian's contact no is required!"],
-  },
-  address: {
-    type: String,
-    trim: true,
-    required: [true, "Local guardian's address is required!"],
-  },
-});
+);
 
 const studentSchema = new Schema<TStudent, StudentModel>(
   {

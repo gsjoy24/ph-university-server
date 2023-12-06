@@ -3,6 +3,7 @@ import { Student } from './student.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
+import { TStudent } from './student.interface';
 
 const getAllStudentsFromDB = async () => {
   const result = await Student.find()
@@ -25,6 +26,34 @@ const getSingleStudentsFromDB = async (id: string) => {
         path: 'academicFaculty',
       },
     });
+  return result;
+};
+
+const updateStudentsIntoDB = async (id: string, payload: Partial<TStudent>) => {
+  const { name, guardian, localGuardian, ...restData } = payload;
+  const modifiedData: Record<string, unknown> = { ...restData };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedData[`name.${key}`] = value;
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedData[`guardian.${key}`] = value;
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedData[`localGuardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, payload, {
+    new: true,
+  });
   return result;
 };
 
@@ -57,11 +86,13 @@ const deleteStudentsFromDB = async (id: string) => {
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
   }
 };
 
 export const StudentServices = {
   getAllStudentsFromDB,
   getSingleStudentsFromDB,
+  updateStudentsIntoDB,
   deleteStudentsFromDB,
 };
