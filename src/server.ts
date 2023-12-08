@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import { Server } from 'http';
 
 let server: Server;
-
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
@@ -16,6 +15,7 @@ async function main() {
   }
 }
 main();
+
 //  handle unhandledRejection
 process.on('unhandledRejection', () => {
   console.log('🚩🚩 unhandledRejection error 🚩🚩');
