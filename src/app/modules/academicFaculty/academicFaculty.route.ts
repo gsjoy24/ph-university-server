@@ -7,7 +7,7 @@ const route = express.Router();
 
 route.post(
   '/',
-  validateRequest(AcademicFacultyValidations.academicFacultyValidationSchema),
+  // validateRequest(AcademicFacultyValidations.academicFacultyValidationSchema),
   AcademicFacultyControllers.createAcademicFaculty,
 );
 

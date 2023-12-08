@@ -1,34 +1,38 @@
 import { z } from 'zod';
 // Define the userName schema
-const userNameValidationSchema = z.object({
-  firstName: z
-    .string({
-      required_error: 'First name is required',
-      invalid_type_error: 'First name must be a string',
-    })
-    .max(20)
-    .regex(/^[A-Z][a-z]*$/, {
-      message:
-        'First name should start with a capital letter and contain only letters',
-    }),
-  middleName: z
-    .string({
-      required_error: 'Middle name is required',
-      invalid_type_error: 'Middle name must be a string',
-    })
-    .max(20, { message: 'Middle name should not be more than 20 characters' })
-    .optional(),
-  lastName: z
-    .string({
-      required_error: 'Last name is required',
-      invalid_type_error: 'Last name must be a string',
-    })
-    .max(20, { message: 'Last name should not be more than 20 characters' })
-    .regex(/^[a-zA-Z]+$/, {
-      message: 'Last name should contain only letters',
-    }),
-});
-
+const userNameValidationSchema = z.object(
+  {
+    firstName: z
+      .string({
+        required_error: 'First name is required',
+        invalid_type_error: 'First name must be a string',
+      })
+      .max(20)
+      .regex(/^[A-Z][a-z]*$/, {
+        message:
+          'First name should start with a capital letter and contain only letters',
+      }),
+    middleName: z
+      .string({
+        required_error: 'Middle name is required',
+        invalid_type_error: 'Middle name must be a string',
+      })
+      .max(20, { message: 'Middle name should not be more than 20 characters' })
+      .optional(),
+    lastName: z
+      .string({
+        required_error: 'Last name is required',
+        invalid_type_error: 'Last name must be a string',
+      })
+      .max(20, { message: 'Last name should not be more than 20 characters' })
+      .regex(/^[a-zA-Z]+$/, {
+        message: 'Last name should contain only letters',
+      }),
+  },
+  {
+    required_error: 'User name is required',
+  },
+);
 const UpdateUserNameValidationSchema = z.object({
   firstName: z
     .string({
@@ -63,32 +67,37 @@ const UpdateUserNameValidationSchema = z.object({
 });
 
 // Define guardian schema
-const guardianValidationSchema = z.object({
-  fatherName: z.string({
-    required_error: 'Father name is required',
-    invalid_type_error: 'Father name must be a string',
-  }),
-  fatherOccupation: z.string({
-    required_error: 'Father occupation is required',
-    invalid_type_error: 'Father occupation must be a string',
-  }),
-  fatherContactNo: z.string({
-    required_error: 'Father contact number is required',
-    invalid_type_error: 'Father contact number must be a string',
-  }),
-  motherName: z.string({
-    required_error: 'Mother name is required',
-    invalid_type_error: 'Mother name must be a string',
-  }),
-  motherOccupation: z.string({
-    required_error: 'Mother occupation is required',
-    invalid_type_error: 'Mother occupation must be a string',
-  }),
-  motherContactNo: z.string({
-    required_error: 'Mother contact number is required',
-    invalid_type_error: 'Mother contact number must be a string',
-  }),
-});
+const guardianValidationSchema = z.object(
+  {
+    fatherName: z.string({
+      required_error: 'Father name is required',
+      invalid_type_error: 'Father name must be a string',
+    }),
+    fatherOccupation: z.string({
+      required_error: 'Father occupation is required',
+      invalid_type_error: 'Father occupation must be a string',
+    }),
+    fatherContactNo: z.string({
+      required_error: 'Father contact number is required',
+      invalid_type_error: 'Father contact number must be a string',
+    }),
+    motherName: z.string({
+      required_error: 'Mother name is required',
+      invalid_type_error: 'Mother name must be a string',
+    }),
+    motherOccupation: z.string({
+      required_error: 'Mother occupation is required',
+      invalid_type_error: 'Mother occupation must be a string',
+    }),
+    motherContactNo: z.string({
+      required_error: 'Mother contact number is required',
+      invalid_type_error: 'Mother contact number must be a string',
+    }),
+  },
+  {
+    required_error: 'Guardian is required',
+  },
+);
 
 const UpdateGuardianValidationSchema = z.object({
   fatherName: z
@@ -148,24 +157,29 @@ const UpdateGuardianValidationSchema = z.object({
 });
 
 // Define localGuardian schema
-const localGuardianValidationSchema = z.object({
-  name: z.string({
-    required_error: 'Local guardian name is required',
-    invalid_type_error: 'Local guardian name must be a string',
-  }),
-  occupation: z.string({
-    required_error: 'Local guardian occupation is required',
-    invalid_type_error: 'Local guardian occupation must be a string',
-  }),
-  contactNo: z.string({
-    required_error: 'Local guardian contact number is required',
-    invalid_type_error: 'Local guardian contact number must be a string',
-  }),
-  address: z.string({
-    required_error: 'Local guardian address is required',
-    invalid_type_error: 'Local guardian address must be a string',
-  }),
-});
+const localGuardianValidationSchema = z.object(
+  {
+    name: z.string({
+      required_error: 'Local guardian name is required',
+      invalid_type_error: 'Local guardian name must be a string',
+    }),
+    occupation: z.string({
+      required_error: 'Local guardian occupation is required',
+      invalid_type_error: 'Local guardian occupation must be a string',
+    }),
+    contactNo: z.string({
+      required_error: 'Local guardian contact number is required',
+      invalid_type_error: 'Local guardian contact number must be a string',
+    }),
+    address: z.string({
+      required_error: 'Local guardian address is required',
+      invalid_type_error: 'Local guardian address must be a string',
+    }),
+  },
+  {
+    required_error: 'Local guardian is required',
+  },
+);
 
 const updateLocalGuardianValidationSchema = z.object({
   name: z

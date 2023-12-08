@@ -3,6 +3,8 @@ import { ZodError } from 'zod';
 import { TErrorSources } from '../interface/error';
 import config from '../config';
 import { handleZodError } from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
+import { handleCastError } from '../errors/handleCastError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,8 +24,19 @@ const globalErrorHandler: ErrorRequestHandler = (
     },
   ];
 
+  // handle validation error
   if (err instanceof ZodError) {
     const simplifyError = handleZodError(err);
+    statusCode = simplifyError?.statusCode;
+    message = simplifyError?.message;
+    errorSources = simplifyError?.errorSources;
+  } else if (err.name === 'ValidationError') {
+    const simplifyError = handleValidationError(err);
+    statusCode = simplifyError?.statusCode;
+    message = simplifyError?.message;
+    errorSources = simplifyError?.errorSources;
+  } else if (err.name === 'CastError') {
+    const simplifyError = handleCastError(err);
     statusCode = simplifyError?.statusCode;
     message = simplifyError?.message;
     errorSources = simplifyError?.errorSources;
@@ -33,6 +46,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorSources,
+    // err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };

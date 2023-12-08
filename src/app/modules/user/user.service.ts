@@ -20,6 +20,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   );
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -45,10 +46,12 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.commitTransaction();
     await session.endSession();
     return newStudent[0];
-  } catch (error) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    throw new Error(error);
+    // throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
   }
 };
 
