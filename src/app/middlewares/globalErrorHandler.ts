@@ -5,6 +5,7 @@ import config from '../config';
 import { handleZodError } from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import { handleCastError } from '../errors/handleCastError';
+import AppError from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +41,23 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifyError?.statusCode;
     message = simplifyError?.message;
     errorSources = simplifyError?.errorSources;
+  } else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } else if (err instanceof Error) {
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
   // send response
   return res.status(statusCode).json({
