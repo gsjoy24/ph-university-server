@@ -32,12 +32,12 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   // const filteredQuery = searchQuery
   //   .find(queryObj)
   //   .populate('admissionSemester')
-  //   .populate({
-  //     path: 'academicDepartment',
-  //     populate: {
-  //       path: 'academicFaculty',
-  //     },
-  //   });
+  // .populate({
+  //   path: 'academicDepartment',
+  //   populate: {
+  //     path: 'academicFaculty',
+  //   },
+  // });
 
   // // sorting
   // const sort = query?.sort ? (query?.sort as string) : '-createdAt';
@@ -57,7 +57,17 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   //   : '-__v';
   // const fieldsQuery = await limitingQuery.select(fields);
 
-  const studentQuery = new QueryBuilder(Student.find(), query)
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
     .search(studentSearchableFields)
     .filter()
     .sort()
