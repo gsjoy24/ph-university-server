@@ -1,29 +1,29 @@
 import { TCourse } from './course.interface';
 import Course from './course.model';
 
-const createCourse = async (courseData: TCourse) => {
+const createCourseIntoDB = async (courseData: TCourse) => {
   const result = await Course.create(courseData);
   return result;
 };
 
-const getAllCourse = async () => {
+const getAllCourseFromDB = async () => {
   const result = await Course.find();
   return result;
 };
 
-const getSingleCourse = async (id: string) => {
+const getSingleCourseFromDB = async (id: string) => {
   const result = await Course.findById(id);
   return result;
 };
 
-const updateCourse = async (id: string, courseData: TCourse) => {
+const updateCourseIntoDB = async (id: string, courseData: TCourse) => {
   const result = await Course.findByIdAndUpdate(id, courseData, {
     new: true,
   });
   return result;
 };
 
-const deleteCourse = async (id: string) => {
+const deleteCourseFromDB = async (id: string) => {
   const result = await Course.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -35,9 +35,9 @@ const deleteCourse = async (id: string) => {
 };
 
 export const CourseServices = {
-  createCourse,
-  getAllCourse,
-  getSingleCourse,
-  updateCourse,
-  deleteCourse,
+  createCourseIntoDB,
+  getAllCourseFromDB,
+  getSingleCourseFromDB,
+  updateCourseIntoDB,
+  deleteCourseFromDB,
 };
