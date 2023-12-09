@@ -46,7 +46,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.commitTransaction();
     await session.endSession();
     return newStudent[0];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
