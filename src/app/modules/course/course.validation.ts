@@ -32,7 +32,38 @@ const createCourseValidationSchema = z.object({
   isDeleted: z.boolean().optional(),
 });
 
-const updateCourseValidationSchema = createCourseValidationSchema.partial();
+const updateCourseValidationSchema = z.object({
+  body: z.object({
+    title: z
+      .string({
+        required_error: 'Course title is required',
+        invalid_type_error: 'Course title must be a string',
+      })
+      .optional(),
+    prefix: z
+      .string({
+        required_error: 'Course prefix is required',
+        invalid_type_error: 'Course prefix must be a string',
+      })
+      .optional(),
+    code: z
+      .number({
+        required_error: 'Course code is required',
+        invalid_type_error: 'Course code must be a number',
+      })
+      .optional(),
+    credits: z
+      .number({
+        required_error: 'Course credit is required',
+        invalid_type_error: 'Course credit must be a number',
+      })
+      .optional(),
+    preRequisiteCourses: z
+      .array(PreRequisiteCoursesValidationSchema)
+      .optional(),
+  }),
+  isDeleted: z.boolean().optional(),
+});
 
 export const courseValidations = {
   createCourseValidationSchema,
