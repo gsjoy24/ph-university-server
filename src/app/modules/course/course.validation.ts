@@ -29,9 +29,13 @@ const createCourseValidationSchema = z.object({
       .array(PreRequisiteCoursesValidationSchema)
       .optional(),
   }),
+  isDeleted: z.boolean().optional(),
 });
+
+const updateCourseValidationSchema = createCourseValidationSchema.partial();
 
 export const courseValidations = {
   createCourseValidationSchema,
   PreRequisiteCoursesValidationSchema,
+  updateCourseValidationSchema,
 };
