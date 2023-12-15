@@ -4,6 +4,7 @@ import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { registrationStatus } from './semesterRegistration.constant';
 
 // ! create semester registration
 const createSemesterRegistrationIntoDB = async (
@@ -14,7 +15,10 @@ const createSemesterRegistrationIntoDB = async (
   // check if there is any upcoming or ongoing semester
   const isThereAnyUpcomingOrOngoingSemester =
     await SemesterRegistration.findOne({
-      $or: [{ status: 'UPCOMING' }, { status: 'ONGOING' }],
+      $or: [
+        { status: registrationStatus.UPCOMING },
+        { status: registrationStatus.ONGOING },
+      ],
     });
   if (isThereAnyUpcomingOrOngoingSemester) {
     throw new AppError(
@@ -81,10 +85,29 @@ const updateSemesterRegistrationIntoDB = async (
   }
 
   // check if the semester registration is already ended
-  if (requestedSemester?.status === 'ENDED') {
+  if (requestedSemester?.status === registrationStatus.ENDED) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'Semester registration already ended',
+      'You can not update status of ended semester registration',
+    );
+  }
+
+  // check if the requested semester is upcoming or ongoing and new status is ended or upcoming from ongoing or upcoming from ended
+  if (
+    requestedSemester?.status === registrationStatus.UPCOMING &&
+    payload?.status === registrationStatus.ENDED
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You can not set status to ended from upcoming',
+    );
+  } else if (
+    requestedSemester?.status === registrationStatus.ONGOING &&
+    payload?.status === registrationStatus.UPCOMING
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You can not set status to upcoming from ongoing',
     );
   }
 
@@ -93,6 +116,7 @@ const updateSemesterRegistrationIntoDB = async (
     payload,
     {
       new: true,
+      runValidators: true,
     },
   );
   return semesterRegistration;
