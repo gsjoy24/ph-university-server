@@ -74,6 +74,20 @@ const updateSemesterRegistrationIntoDB = async (
   id: string,
   payload: Partial<TSemesterRegistration>,
 ) => {
+  // check if the semester registration exist
+  const requestedSemester = await SemesterRegistration.findById(id);
+  if (!requestedSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
+  }
+
+  // check if the semester registration is already ended
+  if (requestedSemester?.status === 'ENDED') {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Semester registration already ended',
+    );
+  }
+
   const semesterRegistration = await SemesterRegistration.findByIdAndUpdate(
     id,
     payload,
