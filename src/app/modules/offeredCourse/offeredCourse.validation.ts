@@ -50,8 +50,35 @@ const createOfferCourseValidationSchema = z.object({
   }),
 });
 
+const updateOfferCourseValidationSchema = z.object({
+  body: z.object({
+    faculty: z
+      .string({
+        invalid_type_error: 'Faculty must be a string',
+      })
+      .optional(),
+    maxCapacity: z
+      .number({
+        invalid_type_error: 'Max capacity must be a number',
+      })
+      .optional(),
+    days: z
+      .enum([...Days] as [string, ...string[]], {
+        invalid_type_error: 'Days must be a string',
+      })
+      .optional(),
+    startTime: z.string({
+      invalid_type_error: 'Start time must be a string',
+    }),
+    endTime: z.string({
+      invalid_type_error: 'End time must be a string',
+    }),
+  }),
+});
+
 const offeredCourseValidations = {
   createOfferCourseValidationSchema,
+  updateOfferCourseValidationSchema,
 };
 
 export default offeredCourseValidations;
