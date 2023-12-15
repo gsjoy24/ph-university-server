@@ -7,10 +7,6 @@ const createOfferCourseValidationSchema = z.object({
       required_error: 'Semester registration is required',
       invalid_type_error: 'Semester registration must be a string',
     }),
-    academicSemester: z.string({
-      required_error: 'Academic semester is required',
-      invalid_type_error: 'Academic semester must be a string',
-    }),
     academicFaculty: z.string({
       required_error: 'Academic faculty is required',
       invalid_type_error: 'Academic faculty must be a string',
@@ -35,9 +31,9 @@ const createOfferCourseValidationSchema = z.object({
       required_error: 'Section is required',
       invalid_type_error: 'Section must be a string',
     }),
-    days: z.enum([...Days] as [string, ...string[]], {
+    days: z.array(z.enum([...Days] as [string, ...string[]]), {
       required_error: 'Days is required',
-      invalid_type_error: 'Days must be a string',
+      invalid_type_error: 'Days must be an array',
     }),
     startTime: z.string({
       required_error: 'Start time is required',
