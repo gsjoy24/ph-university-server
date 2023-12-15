@@ -3,7 +3,6 @@ import { SemesterRegistration } from '../semesterRegistration/semesterRegistrati
 import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import AppError from '../../errors/AppError';
-import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { Course } from '../course/course.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
@@ -12,7 +11,6 @@ import { Faculty } from '../Faculty/faculty.model';
 const createOfferedCourseIntoDB = async (courseData: TOfferedCourse) => {
   const {
     semesterRegistration,
-    academicSemester,
     academicFaculty,
     academicDepartment,
     course,
@@ -20,18 +18,11 @@ const createOfferedCourseIntoDB = async (courseData: TOfferedCourse) => {
   } = courseData;
 
   // check if semester registration exists
-  const isSemesterRegistrationExists = await SemesterRegistration.findOne({
-    semesterRegistration,
-  });
+  const isSemesterRegistrationExists =
+    await SemesterRegistration.findById(semesterRegistration);
+
   if (!isSemesterRegistrationExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
-  }
-
-  // check if academic semester exists
-  const isAcademicSemesterExists =
-    await AcademicSemester.findById(academicSemester);
-  if (!isAcademicSemesterExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Academic semester not found');
   }
 
   // check if academic faculty exists
@@ -58,6 +49,17 @@ const createOfferedCourseIntoDB = async (courseData: TOfferedCourse) => {
   const isFacultyExists = await Faculty.findById(faculty);
   if (!isFacultyExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
+  courseData.academicSemester = isSemesterRegistrationExists?.academicSemester;
+
+  // check if the department id belongs to the faculty
+  const isDepartmentBelongsToTheAcademicFaculty =
+    await AcademicDepartment.findOne({ academicDepartment, academicFaculty });
+  if (!isDepartmentBelongsToTheAcademicFaculty) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `This ${isAcademicFacultyExists.name} does not belong to ${isAcademicDepartmentExists.name}`,
+    );
   }
 
   const result = await OfferedCourse.create(courseData);
