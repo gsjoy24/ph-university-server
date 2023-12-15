@@ -40,6 +40,7 @@ const OfferCourseSchema = new Schema<TOfferedCourse>(
     },
     section: {
       type: String,
+      trim: true,
       required: [true, 'Section is required'],
     },
     days: {
