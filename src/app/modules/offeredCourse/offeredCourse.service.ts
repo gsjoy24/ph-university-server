@@ -54,11 +54,27 @@ const createOfferedCourseIntoDB = async (courseData: TOfferedCourse) => {
 
   // check if the department id belongs to the faculty
   const isDepartmentBelongsToTheAcademicFaculty =
-    await AcademicDepartment.findOne({ academicDepartment, academicFaculty });
+    await AcademicDepartment.findOne({
+      _id: academicDepartment,
+      academicFaculty,
+    });
   if (!isDepartmentBelongsToTheAcademicFaculty) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `This ${isAcademicFacultyExists.name} does not belong to ${isAcademicDepartmentExists.name}`,
+    );
+  }
+
+  //! check if the course is already offered
+  const isCourseAlreadyOffered = await OfferedCourse.findOne({
+    semesterRegistration,
+    academicFaculty,
+    course, 
+  });
+  if (isCourseAlreadyOffered) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'This course is already offered',
     );
   }
 
