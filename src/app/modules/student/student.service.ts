@@ -7,6 +7,7 @@ import { TStudent } from './student.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
 
+// * get all students
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   // const searchTerm = query?.searchTerm ? query?.searchTerm : '';
   // const queryObj = { ...query };
@@ -78,6 +79,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+// * get single student
 const getSingleStudentsFromDB = async (id: string) => {
   const result = await Student.findById(id)
     .populate('admissionSemester')
@@ -90,6 +92,7 @@ const getSingleStudentsFromDB = async (id: string) => {
   return result;
 };
 
+// * update student
 const updateStudentsIntoDB = async (id: string, payload: Partial<TStudent>) => {
   const { name, guardian, localGuardian, ...restData } = payload;
   const modifiedData: Record<string, unknown> = { ...restData };
@@ -118,6 +121,7 @@ const updateStudentsIntoDB = async (id: string, payload: Partial<TStudent>) => {
   return result;
 };
 
+// * delete student
 const deleteStudentsFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
