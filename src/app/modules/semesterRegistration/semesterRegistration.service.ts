@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
@@ -14,7 +15,7 @@ const createSemesterRegistrationIntoDB = async (
       academicSemester,
     },
   );
-  if (!isSemesterRegistrationAlreadyExist) {
+  if (isSemesterRegistrationAlreadyExist) {
     throw new AppError(
       httpStatus.CONFLICT,
       'Semester registration already exist',
@@ -31,13 +32,24 @@ const createSemesterRegistrationIntoDB = async (
   return semesterRegistration;
 };
 
-const getAllSemesterRegistrationFromDB = async () => {
-  const semesterRegistration = await SemesterRegistration.find();
-  return semesterRegistration;
+const getAllSemesterRegistrationFromDB = async (
+  query: Record<string, unknown>,
+) => {
+  const semesterRegistration = new QueryBuilder(
+    SemesterRegistration.find().populate('academicSemester'),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await semesterRegistration.modelQuery;
+  return result;
 };
 
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
-  const semesterRegistration = await SemesterRegistration.findOne({ _id: id });
+  const semesterRegistration =
+    await SemesterRegistration.findById(id).populate('academicSemester');
   return semesterRegistration;
 };
 

@@ -18,7 +18,9 @@ const createSemesterRegistration = catchAsync(async (req, res) => {
 
 const getAllSemesterRegistration = catchAsync(async (req, res) => {
   const result =
-    await semesterRegistrationService.getAllSemesterRegistrationFromDB();
+    await semesterRegistrationService.getAllSemesterRegistrationFromDB(
+      req.query,
+    );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
