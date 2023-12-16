@@ -1,5 +1,19 @@
 import { z } from 'zod';
 import { Days } from './offeredCourse.constant';
+const timeStringSchema = z
+  .string({
+    required_error: 'Start time and end time is required',
+    invalid_type_error: 'Start time and end time must be a string',
+  })
+  .refine(
+    (time) => {
+      const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+      return regex.test(time);
+    },
+    {
+      message: 'The time must be in hh:mm format (00:00 - 23:59)',
+    },
+  );
 
 const createOfferCourseValidationSchema = z.object({
   body: z
@@ -36,34 +50,8 @@ const createOfferCourseValidationSchema = z.object({
         required_error: 'Days is required',
         invalid_type_error: 'Days must be an array',
       }),
-      startTime: z
-        .string({
-          required_error: 'Start time is required',
-          invalid_type_error: 'Start time must be a string',
-        })
-        .refine(
-          (time) => {
-            const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-            return regex.test(time);
-          },
-          {
-            message: 'Start time must be in hh:mm format (00:00 - 23:59)',
-          },
-        ),
-      endTime: z
-        .string({
-          required_error: 'End time is required',
-          invalid_type_error: 'End time must be a string',
-        })
-        .refine(
-          (time) => {
-            const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-            return regex.test(time);
-          },
-          {
-            message: 'End time must be in hh:mm format (00:00 - 23:59)',
-          },
-        ),
+      startTime: timeStringSchema,
+      endTime: timeStringSchema,
     })
     .refine(
       ({ startTime, endTime }) => {
@@ -78,29 +66,30 @@ const createOfferCourseValidationSchema = z.object({
 });
 
 const updateOfferCourseValidationSchema = z.object({
-  body: z.object({
-    faculty: z
-      .string({
+  body: z
+    .object({
+      faculty: z.string({
         invalid_type_error: 'Faculty must be a string',
-      })
-      .optional(),
-    maxCapacity: z
-      .number({
+        required_error: 'Faculty is required',
+      }),
+      maxCapacity: z.number({
         invalid_type_error: 'Max capacity must be a number',
-      })
-      .optional(),
-    days: z
-      .enum([...Days] as [string, ...string[]], {
-        invalid_type_error: 'Days must be a string',
-      })
-      .optional(),
-    startTime: z.string({
-      invalid_type_error: 'Start time must be a string',
-    }),
-    endTime: z.string({
-      invalid_type_error: 'End time must be a string',
-    }),
-  }),
+        required_error: 'Max capacity is required',
+      }),
+      days: z.array(z.enum([...Days] as [string, ...string[]])),
+      startTime: timeStringSchema,
+      endTime: timeStringSchema,
+    })
+    .refine(
+      ({ startTime, endTime }) => {
+        const start = new Date(`2003-03-24T${startTime}:00`);
+        const end = new Date(`2003-03-24T${endTime}:00`);
+        return start < end;
+      },
+      {
+        message: 'Start time must be before end time',
+      },
+    ),
 });
 
 const offeredCourseValidations = {
