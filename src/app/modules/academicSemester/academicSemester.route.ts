@@ -2,10 +2,11 @@ import express from 'express';
 import { AcademicSemesterControllers } from './academicSemester.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { AcademicSemesterValidations } from './academicSemester.validation';
+import auth from '../../middlewares/auth';
 
 const route = express.Router();
 
-route.get('/', AcademicSemesterControllers.getAllAcademicSemesters);
+route.get('/', auth(), AcademicSemesterControllers.getAllAcademicSemesters);
 route.post(
   '/create-academic-semester',
   validateRequest(
