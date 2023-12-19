@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 export interface TUser {
   id: string;
   password: string;
-  needsPasswordChange: boolean;
+  needsPasswordChange?: boolean;
   role: 'student' | 'admin' | 'faculty';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;

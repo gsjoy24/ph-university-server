@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
+import config from '../../config';
 
 const loginUser = async (payload: TLoginUser) => {
   const { id, password } = payload;
@@ -36,7 +37,14 @@ const loginUser = async (payload: TLoginUser) => {
     id: user?.id,
     role: user?.role,
   };
-  const accessToken = jwt.sign(jwtPayload );
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '15d',
+  });
+
+  return {
+    accessToken,
+    needsPasswordChange: user?.needsPasswordChange,
+  };
 };
 
 export const AuthServices = {
