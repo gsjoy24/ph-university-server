@@ -13,6 +13,7 @@ const userSchema = new Schema<TUser, UserModel>(
     password: {
       type: String,
       required: [true, 'Password is required!'],
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
@@ -26,7 +27,7 @@ const userSchema = new Schema<TUser, UserModel>(
       type: String,
       enum: ['in-progress', 'blocked'],
       default: 'in-progress',
-    },
+    }, 
     isDeleted: {
       type: Boolean,
       default: false,
