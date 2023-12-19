@@ -29,14 +29,16 @@ const loginUser = async (payload: TLoginUser) => {
     password,
     user?.password,
   );
+
   if (!isPasswordMatch) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+    throw new AppError(httpStatus.FORBIDDEN, 'Invalid credentials');
   }
 
   const jwtPayload = {
     id: user?.id,
     role: user?.role,
   };
+
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: '15d',
   });
