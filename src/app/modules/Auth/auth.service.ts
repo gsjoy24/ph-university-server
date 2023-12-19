@@ -36,7 +36,7 @@ const loginUser = async (payload: TLoginUser) => {
     id: user?.id,
     role: user?.role,
   };
-  const accessToken = jwt.sign();
+  const accessToken = jwt.sign({ data: jwtPayload });
 };
 
 export const AuthServices = {
