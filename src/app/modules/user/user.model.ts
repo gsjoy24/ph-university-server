@@ -27,7 +27,7 @@ const userSchema = new Schema<TUser, UserModel>(
       type: String,
       enum: ['in-progress', 'blocked'],
       default: 'in-progress',
-    }, 
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -56,7 +56,7 @@ userSchema.post('save', function (doc, next) {
 });
 
 userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-  return await this.findOne({ id });
+  return await this.findOne({ id }).select('+password');
 };
 
 userSchema.statics.isPasswordMatched = async function (

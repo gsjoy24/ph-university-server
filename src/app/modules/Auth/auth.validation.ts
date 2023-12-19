@@ -12,6 +12,7 @@ const LoginUserValidationSchema = z.object({
     }),
   }),
 });
+
 const changePasswordValidationSchema = z.object({
   body: z.object({
     oldPassword: z.string({
