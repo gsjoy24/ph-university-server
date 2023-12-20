@@ -55,6 +55,7 @@ const changePassword = async (
   payload: TChangePassword,
 ) => {
   const { oldPassword, newPassword } = payload;
+
   // check if the user is exist
   const user = await User.isUserExistsByCustomId(userData.id);
   if (!user) {
@@ -78,7 +79,7 @@ const changePassword = async (
   );
 
   if (!isPasswordMatch) {
-    throw new AppError(httpStatus.FORBIDDEN, 'Invalid credentials');
+    throw new AppError(httpStatus.FORBIDDEN, 'Password does not match');
   }
 
   const hashedPassword = await bcrypt.hash(
@@ -92,6 +93,8 @@ const changePassword = async (
     },
     {
       password: hashedPassword,
+      needsPasswordChange: false,
+      passwordChangedAt: new Date(),
     },
   );
 

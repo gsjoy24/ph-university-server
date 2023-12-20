@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import catchAsync from '../../utils/catchAsync';
+import { JwtPayload } from 'jsonwebtoken';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
@@ -15,7 +16,10 @@ const loginUser = catchAsync(async (req, res) => {
 });
 
 const changePassword = catchAsync(async (req, res) => {
-  const result = await AuthServices.changePassword(req.user, req.body);
+  const result = await AuthServices.changePassword(
+    req.user as JwtPayload,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -25,7 +29,7 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
-export const AuthControllers = {     
+export const AuthControllers = {
   loginUser,
   changePassword,
 };
