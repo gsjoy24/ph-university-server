@@ -60,6 +60,13 @@ userSchema.statics.isUserExistsByCustomId = async function (id: string) {
   return await this.findOne({ id }).select('+password');
 };
 
+userSchema.statics.isJwtIssuedBeforePasswordChanged = function (
+  passwordChangedAt: Date,
+  jwtIssuedAt: number,
+) {
+  return passwordChangedAt.getTime() > jwtIssuedAt;
+};
+
 userSchema.statics.isPasswordMatched = async function (
   plainPassword: string,
   hashedPassword: string,
