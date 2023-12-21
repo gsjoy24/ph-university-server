@@ -183,12 +183,12 @@ const forgotPassword = async (id: string) => {
     id: user?.id,
     role: user?.role,
   };
-  const token = createToken(
+  const resetToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
     '15m',
   );
-  const resetUILink = `${config.app_url}?id=${user.id}&token=${token}`;
+  const resetUILink = `${config.app_url}?id=${user.id}&token=${resetToken}`;
   return resetUILink;
 };
 

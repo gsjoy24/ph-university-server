@@ -16,7 +16,7 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const createFaculty = catchAsync(async (req, res) => {
-  const { password,  facultyData } = req.body;
+  const { password, facultyData } = req.body;
 
   const result = await UserServices.createFacultyIntoDB(password, facultyData);
 
@@ -29,7 +29,7 @@ const createFaculty = catchAsync(async (req, res) => {
 });
 
 const createAdmin = catchAsync(async (req, res) => {
-  const { password, admin: adminData } = req.body;
+  const { password, adminData } = req.body;
 
   const result = await UserServices.createAdminIntoDB(password, adminData);
 
