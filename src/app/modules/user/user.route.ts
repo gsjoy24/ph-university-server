@@ -4,8 +4,8 @@ import { studentValidations } from '../student/student.validation';
 import validateRequest from '../../middlewares/validateRequest';
 import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
-import auth from '../../middlewares/auth';
-import { USER_ROLES } from './user.constant';
+// import auth from '../../middlewares/auth';
+// import { USER_ROLES } from './user.constant';
 const router = express.Router();
 
 router.post(
@@ -16,14 +16,14 @@ router.post(
 );
 router.post(
   '/create-faculty',
-  auth(USER_ROLES.admin),
+  // auth(USER_ROLES.admin),
   validateRequest(createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
 
 router.post(
   '/create-admin',
-  auth(USER_ROLES.admin),
+  // auth(USER_ROLES.admin),
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
