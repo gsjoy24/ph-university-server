@@ -51,12 +51,13 @@ const refreshToken = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const userId = req.body.id;
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const result = await AuthServices.forgotPassword(userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Password reset link sent successfully',
-    data: result,
+    data: null,
   });
 });
 

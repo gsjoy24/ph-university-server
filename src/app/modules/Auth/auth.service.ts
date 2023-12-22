@@ -7,6 +7,7 @@ import { User } from '../user/user.model';
 import { TChangePassword, TLoginUser } from './auth.interface';
 import config from '../../config';
 import { createToken } from './auth.utils';
+import { sendEmail } from '../../utils/sendEmai';
 
 const loginUser = async (payload: TLoginUser) => {
   const { id, password } = payload;
@@ -189,7 +190,8 @@ const forgotPassword = async (id: string) => {
     '15m',
   );
   const resetUILink = `${config.app_url}?id=${user.id}&token=${resetToken}`;
-  return resetUILink;
+  sendEmail(user?.email, resetUILink);
+  return;
 };
 
 export const AuthServices = {
