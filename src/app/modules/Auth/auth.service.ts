@@ -8,6 +8,9 @@ import { TChangePassword, TLoginUser, TResetPassword } from './auth.interface';
 import config from '../../config';
 import { createToken } from './auth.utils';
 import { sendEmail } from '../../utils/sendEmai';
+import { Admin } from '../Admin/admin.model';
+import { Student } from '../student/student.model';
+import { Faculty } from '../Faculty/faculty.model';
 
 const loginUser = async (payload: TLoginUser) => {
   const { id, password } = payload;
@@ -240,10 +243,33 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
   return result;
 };
 
+const getMe = async (token: string) => {
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
+  const { id, role } = decoded;
+
+  let result = null;
+  if (role === 'admin') {
+    result = await Admin.findOne({ id });
+  } else if (role === 'student') {
+    result = await Student.findOne({ id });
+  } else if (role === 'faculty') {
+    result = await Faculty.findOne({ id });
+  }
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  return result;
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
   forgotPassword,
   resetPassword,
+  getMe,
 };

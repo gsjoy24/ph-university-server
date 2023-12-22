@@ -4,6 +4,7 @@ import { AuthServices } from './auth.service';
 import catchAsync from '../../utils/catchAsync';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
+import AppError from '../../errors/AppError';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
@@ -63,11 +64,26 @@ const forgotPassword = catchAsync(async (req, res) => {
 
 const resetPassword = catchAsync(async (req, res) => {
   const token = req.headers.authorization;
-  const result = await AuthServices.resetPassword(req.body, token);
+  const result = await AuthServices.resetPassword(req.body, token as string);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Password reset successfully',
+    data: result,
+  });
+});
+
+const getMe = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Token not found!');
+  }
+
+  const result = await AuthServices.getMe(token );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User fetched successfully',
     data: result,
   });
 });
@@ -78,4 +94,5 @@ export const AuthControllers = {
   refreshToken,
   forgotPassword,
   resetPassword,
+  getMe,
 };
