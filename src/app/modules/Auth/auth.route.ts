@@ -43,4 +43,6 @@ router.get(
   auth(USER_ROLES.admin, USER_ROLES.faculty, USER_ROLES.student),
   AuthControllers.getMe,
 );
+
+
 export const AuthRoutes = router;
