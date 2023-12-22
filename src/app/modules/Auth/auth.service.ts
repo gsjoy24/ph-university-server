@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TChangePassword, TLoginUser, TResetPassword } from './auth.interface';
@@ -243,20 +242,14 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
   return result;
 };
 
-const getMe = async (token: string) => {
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
-  const { id, role } = decoded;
-
+const getMe = async (id: string, role: string) => {
   let result = null;
   if (role === 'admin') {
-    result = await Admin.findOne({ id });
+    result = await Admin.findOne({ id }).populate('user');
   } else if (role === 'student') {
-    result = await Student.findOne({ id });
+    result = await Student.findOne({ id }).populate('user');
   } else if (role === 'faculty') {
-    result = await Faculty.findOne({ id });
+    result = await Faculty.findOne({ id }).populate('user');
   }
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
