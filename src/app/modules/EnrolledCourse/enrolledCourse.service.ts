@@ -3,7 +3,10 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
   return result;
 };
 
-const updateEnrolledCourseMarksIntoDB = async (userId: string) => {
+const updateEnrolledCourseMarksIntoDB = async (
+  userId: string,
+  payload: any,
+) => {
   const result = {};
   return result;
 };
