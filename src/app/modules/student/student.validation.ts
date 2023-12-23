@@ -265,11 +265,11 @@ const createStudentValidationSchema = z.object({
       }),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
-      profileImg: z.string().url({ message: 'Invalid url' }).optional(),
-      admissionSemester: z.string({
-        required_error: 'Academic semester is required',
-        invalid_type_error: 'Academic semester must be a string',
-      }),
+      // profileImg: z.string().url({ message: 'Invalid url' }).optional(),
+      // admissionSemester: z.string({
+      //   required_error: 'Academic semester is required',
+      //   invalid_type_error: 'Academic semester must be a string',
+      // }),
     }),
   }),
 });
@@ -340,7 +340,7 @@ const updateStudentValidationSchema = z.object({
 
       localGuardian: updateLocalGuardianValidationSchema.optional(),
 
-      profileImg: z.string().url({ message: 'Invalid url' }).optional(),
+      // profileImg: z.string().url({ message: 'Invalid url' }).optional(),
 
       admissionSemester: z
         .string({

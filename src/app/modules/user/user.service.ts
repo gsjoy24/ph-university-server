@@ -20,7 +20,11 @@ import { Admin } from '../Admin/admin.model';
 import { TAdmin } from '../Admin/admin.interface';
 import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: unknown,
+  password: string,
+  payload: TStudent,
+) => {
   // create a new user object
   const userData: Partial<TUser> = {};
   userData.role = 'student';

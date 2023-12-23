@@ -72,10 +72,10 @@ export const createFacultyValidationSchema = z.object({
         required_error: 'Academic Department is required',
         invalid_type_error: 'Academic Department must be a string',
       }),
-      profileImg: z.string({
-        required_error: 'Profile Image is required',
-        invalid_type_error: 'Profile Image must be a string',
-      }),
+      // profileImg: z.string({
+      //   required_error: 'Profile Image is required',
+      //   invalid_type_error: 'Profile Image must be a string',
+      // }),
     }),
   }),
 });
