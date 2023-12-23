@@ -33,6 +33,7 @@ const userNameValidationSchema = z.object(
     required_error: 'User name is required',
   },
 );
+
 const UpdateUserNameValidationSchema = z.object({
   firstName: z
     .string({
@@ -221,10 +222,7 @@ const updateLocalGuardianValidationSchema = z.object({
 // Define student schema
 const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string({
-      required_error: 'Password is required',
-      invalid_type_error: 'Password must be a string',
-    }),
+    password: z.string().optional(),
     studentData: z.object({
       name: userNameValidationSchema,
       gender: z.enum(['male', 'female', 'other'], {
