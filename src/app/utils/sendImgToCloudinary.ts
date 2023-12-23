@@ -3,7 +3,6 @@ import config from '../config';
 import multer from 'multer';
 import fs from 'fs';
 
-
 cloudinary.config({
   cloud_name: config.cloudinary_cloud_name,
   api_key: config.cloudinary_api_key,
@@ -20,9 +19,14 @@ const sendImgToCloudinary = (imgName: string, path: string) => {
           reject(error);
         }
         resolve(result);
+        // deleting the uploaded file from server
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
       },
-     );
-     
+    );
   });
 };
 
