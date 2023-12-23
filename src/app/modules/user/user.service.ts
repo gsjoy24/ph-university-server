@@ -21,7 +21,8 @@ import { TAdmin } from '../Admin/admin.interface';
 import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
 
 const createStudentIntoDB = async (
-  file: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  file: any,
   password: string,
   payload: TStudent,
 ) => {
@@ -43,11 +44,13 @@ const createStudentIntoDB = async (
     userData.id = await generateStudentId(
       admissionSemester as TAcademicSemester,
     );
+    const imgName = `${userData.id}-${payload?.name?.firstName.toLowerCase()}`;
+    const path = file?.path as string;
+    console.log({ imgName, path });
+    const { secure_url } = await sendImgToCloudinary(imgName, path);
 
     // create a user on db
     const newUser = await User.create([userData], { session });
-
-    sendImgToCloudinary();
 
     // checking if the user is created
     if (!newUser.length) {
@@ -55,7 +58,8 @@ const createStudentIntoDB = async (
     }
 
     payload.id = newUser[0].id;
-    payload.user = newUser[0]._id; //reference _id
+    payload.user = newUser[0]._id;
+    payload.profileImg = secure_url;
 
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {
@@ -69,8 +73,7 @@ const createStudentIntoDB = async (
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(error);
-    // throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
   }
 };
 

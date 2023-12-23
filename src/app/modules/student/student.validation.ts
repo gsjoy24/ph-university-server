@@ -265,11 +265,6 @@ const createStudentValidationSchema = z.object({
       }),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
-      // profileImg: z.string().url({ message: 'Invalid url' }).optional(),
-      // admissionSemester: z.string({
-      //   required_error: 'Academic semester is required',
-      //   invalid_type_error: 'Academic semester must be a string',
-      // }),
     }),
   }),
 });
@@ -284,19 +279,16 @@ const updateStudentValidationSchema = z.object({
 
     studentData: z.object({
       name: UpdateUserNameValidationSchema.optional(),
-
       gender: z
         .enum(['male', 'female', 'other'], {
           invalid_type_error: 'Gender must be a string',
         })
         .optional(),
-
       dateOfBirth: z
         .string({
           invalid_type_error: 'Date of birth must be a string',
         })
         .optional(),
-
       email: z
         .string({
           invalid_type_error: 'Email must be a string',
@@ -305,43 +297,33 @@ const updateStudentValidationSchema = z.object({
           message: 'Invalid email address',
         })
         .optional(),
-
       contactNo: z
         .string({
           invalid_type_error: 'Contact number must be a string',
         })
         .optional(),
-
       emergencyContactNo: z
         .string({
           invalid_type_error: 'Emergency contact number must be a string',
         })
         .optional(),
-
       bloodGroup: z
         .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
           invalid_type_error: 'Blood group must be a string',
         })
         .optional(),
-
       presentAddress: z
         .string({
           invalid_type_error: 'Present address must be a string',
         })
         .optional(),
-
       permanentAddress: z
         .string({
           invalid_type_error: 'Permanent address must be a string',
         })
         .optional(),
-
       guardian: UpdateGuardianValidationSchema.optional(),
-
       localGuardian: updateLocalGuardianValidationSchema.optional(),
-
-      // profileImg: z.string().url({ message: 'Invalid url' }).optional(),
-
       admissionSemester: z
         .string({
           invalid_type_error: 'Academic semester must be a string',
