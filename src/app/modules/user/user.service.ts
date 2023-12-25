@@ -46,8 +46,7 @@ const createStudentIntoDB = async (
     );
     const imgName = `${userData.id}-${payload?.name?.firstName.toLowerCase()}`;
     const path = file?.path as string;
-    console.log({ imgName, path });
-    const { secure_url } = await sendImgToCloudinary(imgName, path);
+    const uploadedPhoto = await sendImgToCloudinary(imgName, path);
 
     // create a user on db
     const newUser = await User.create([userData], { session });
@@ -59,7 +58,7 @@ const createStudentIntoDB = async (
 
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
-    payload.profileImg = secure_url;
+    payload.profileImg = uploadedPhoto?.secure_url as string;
 
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {

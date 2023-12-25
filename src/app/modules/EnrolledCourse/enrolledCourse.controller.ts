@@ -4,9 +4,9 @@ import sendResponse from '../../utils/sendResponse';
 import EnrolledCourseServices from './enrolledCourse.service';
 
 const createEnrolledCourse = catchAsync(async (req, res) => {
-  const userId = req.user.userId;
+  const { id } = req.user;
   const result = await EnrolledCourseServices.createEnrolledCourseIntoDB(
-    userId,
+    id,
     req.body,
   );
 
@@ -19,11 +19,12 @@ const createEnrolledCourse = catchAsync(async (req, res) => {
 });
 
 const updateEnrolledCourseMarks = catchAsync(async (req, res) => {
-  const facultyId = req.user.userId;
-  const result = await EnrolledCourseServices.updateEnrolledCourseMarksIntoDB(
-    facultyId,
-    req.body,
-  );
+  // const facultyId = req.user.userId;
+  const result = await EnrolledCourseServices
+    .updateEnrolledCourseMarksIntoDB
+    // facultyId,
+    // req.body,
+    ();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

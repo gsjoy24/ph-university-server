@@ -3,8 +3,11 @@ import AppError from '../../errors/AppError';
 import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../student/student.model';
+import mongoose from 'mongoose';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
+  const session = await mongoose.startSession();
   const { offeredCourse } = payload;
 
   // check if offered course exists
@@ -35,26 +38,57 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
     throw new AppError(httpStatus.CONFLICT, 'Course capacity is full');
   }
 
-  const result = await EnrolledCourse.create({
-    semesterRegistration: isOfferedCourseExits?.semesterRegistration,
-    academicSemester: isOfferedCourseExits?.academicSemester,
-    academicFaculty: isOfferedCourseExits?.academicFaculty,
-    academicDepartment: isOfferedCourseExits?.academicDepartment,
-    offeredCourse,
-    course: isOfferedCourseExits?.course,
-    student: student?._id,
-    faculty: isOfferedCourseExits?.faculty,
-  });
-  return result;
+  // check the max credit
+  const semesterRegistration = await OfferedCourse.findById(
+    isOfferedCourseExits?.semesterRegistration,
+  ).select('maxCredit');
+
+  try {
+    session.startTransaction();
+
+    const result = await EnrolledCourse.create(
+      [
+        {
+          semesterRegistration: isOfferedCourseExits?.semesterRegistration,
+          academicSemester: isOfferedCourseExits?.academicSemester,
+          academicFaculty: isOfferedCourseExits?.academicFaculty,
+          academicDepartment: isOfferedCourseExits?.academicDepartment,
+          offeredCourse,
+          course: isOfferedCourseExits?.course,
+          student: student?._id,
+          faculty: isOfferedCourseExits?.faculty,
+          isEnrolled: true,
+        },
+      ],
+      { session },
+    );
+
+    if (!result) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to enroll course');
+    }
+
+    // update the capacity of offered course
+    await OfferedCourse.findByIdAndUpdate(offeredCourse, {
+      $inc: { maxCapacity: -1 },
+    });
+
+    await session.commitTransaction();
+    return result;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+  }
 };
 
-const updateEnrolledCourseMarksIntoDB = async (
-  userId: string,
-  payload: any,
-) => {
-  const result = {};
-  return result;
-};
+const updateEnrolledCourseMarksIntoDB = async () =>
+  // userId: string,
+  // payload: any,
+  {
+    const result = {};
+    return result;
+  };
 
 const EnrolledCourseServices = {
   createEnrolledCourseIntoDB,
