@@ -4,6 +4,8 @@ import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
+import { Course } from '../course/course.model';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
@@ -21,6 +23,7 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
   }
 
+  // check if student is already enrolled
   const isEnrolled = await EnrolledCourse.findOne({
     offeredCourse,
     student: student?._id,
@@ -38,10 +41,55 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
     throw new AppError(httpStatus.CONFLICT, 'Course capacity is full');
   }
 
-  // check the max credit
-  const semesterRegistration = await OfferedCourse.findById(
+  const course = await Course.findById(isOfferedCourseExits?.course);
+
+  const semesterRegistration = await SemesterRegistration.findById(
     isOfferedCourseExits?.semesterRegistration,
   ).select('maxCredit');
+
+  const enrolledCourses = await EnrolledCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: isOfferedCourseExits?.semesterRegistration,
+        student: student?._id,
+      },
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'enrolledCourseData',
+      },
+    },
+    {
+      $unwind: '$enrolledCourseData',
+    },
+    {
+      $group: {
+        _id: null,
+        totalCredit: {
+          $sum: '$enrolledCourseData.credits',
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalCredit: 1,
+      },
+    },
+  ]);
+  // check the max credit
+  const totalCredit = enrolledCourses[0]?.totalCredit || 0;
+
+  if (
+    totalCredit &&
+    semesterRegistration?.maxCredit &&
+    totalCredit + course?.credits > semesterRegistration?.maxCredit
+  ) {
+    throw new AppError(httpStatus.CONFLICT, 'Semester credit is full');
+  }
 
   try {
     session.startTransaction();
@@ -73,7 +121,7 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
     });
 
     await session.commitTransaction();
-    return result;
+    return result[0];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     await session.abortTransaction();
