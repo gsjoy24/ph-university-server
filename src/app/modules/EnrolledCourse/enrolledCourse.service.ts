@@ -6,6 +6,7 @@ import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { Course } from '../course/course.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { TEnrolledCourse } from './enrolledCourse.interface';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
@@ -130,13 +131,42 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
   }
 };
 
-const updateEnrolledCourseMarksIntoDB = async () =>
-  // userId: string,
-  // payload: any,
-  {
-    const result = {};
-    return result;
-  };
+const updateEnrolledCourseMarksIntoDB = async (
+  facultyId: string,
+  payload: Partial<TEnrolledCourse>,
+) => {
+  const { student, offeredCourse, courseMarks, semesterRegistration } = payload;
+
+  // check if semesterRegistration is exists
+  const isSemesterRegistrationExists =
+    await SemesterRegistration.findById(semesterRegistration);
+  if (!isSemesterRegistrationExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
+  }
+
+  // check if offered course is exists
+  const isOfferedCourseExists = await OfferedCourse.findById(offeredCourse);
+  if (!isOfferedCourseExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found');
+  }
+
+  // check if student is exists
+  const isStudentExists = await Student.findById(student);
+  if (!isStudentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+  }
+
+  // check if the faculty is belong to the course
+  const isTheFacultyBelongToTheCourse = await EnrolledCourse.findOne({
+    student,
+    offeredCourse,
+    semesterRegistration,
+    // faculty: facultyId,
+  });
+console.log(isTheFacultyBelongToTheCourse);
+  const result = {};
+  return result;
+};
 
 const EnrolledCourseServices = {
   createEnrolledCourseIntoDB,
