@@ -37,6 +37,19 @@ const createStudentIntoDB = async (
     payload.admissionSemester,
   );
 
+  if (!admissionSemester) {
+    throw new AppError(400, 'Admission semester not found');
+  }
+
+  // check if academic department exists
+  const academicDepartment = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+
+  if (!academicDepartment) {
+    throw new AppError(400, 'Academic department not found');
+  }
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -58,7 +71,8 @@ const createStudentIntoDB = async (
 
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
-    payload.profileImg = uploadedPhoto?.secure_url as string;
+    payload.profileImg = (uploadedPhoto as { secure_url?: string })
+      ?.secure_url as string;
 
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {
