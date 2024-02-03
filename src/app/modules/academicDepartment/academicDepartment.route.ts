@@ -1,18 +1,18 @@
 import express from 'express';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
+import { USER_ROLES } from '../user/user.constant';
+import { AcademicDepartmentController } from './academicDepartment.controller';
 import {
   AcademicDepartmentValidationSchema,
   UpdateAcademicDepartmentValidationSchema,
 } from './academicDepartment.validation';
-import { AcademicDepartmentController } from './academicDepartment.controller';
-import { USER_ROLES } from '../user/user.constant';
-import auth from '../../middlewares/auth';
 
 const route = express.Router();
 
 route.post(
   '/',
-  auth(USER_ROLES.admin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
   validateRequest(AcademicDepartmentValidationSchema),
   AcademicDepartmentController.createAcademicDepartment,
 );
