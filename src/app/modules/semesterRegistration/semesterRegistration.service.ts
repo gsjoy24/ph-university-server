@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { registrationStatus } from './semesterRegistration.constant';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
-import QueryBuilder from '../../builder/QueryBuilder';
-import { registrationStatus } from './semesterRegistration.constant';
 
 // ! create semester registration
 const createSemesterRegistrationIntoDB = async (

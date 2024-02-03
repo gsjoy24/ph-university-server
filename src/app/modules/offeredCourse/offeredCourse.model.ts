@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { TOfferedCourse } from './offeredCourse.interface';
 import { Days } from './offeredCourse.constant';
+import { TOfferedCourse } from './offeredCourse.interface';
 
 const OfferCourseSchema = new Schema<TOfferedCourse>(
   {

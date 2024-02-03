@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
+import { Faculty } from '../Faculty/faculty.model';
+import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
+import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
+import { Course } from '../course/course.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
-import AppError from '../../errors/AppError';
-import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
-import { Course } from '../course/course.model';
-import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { Faculty } from '../Faculty/faculty.model';
 import { HasTimeConflict } from './offeredCourse.utils';
 
 const createOfferedCourseIntoDB = async (courseData: TOfferedCourse) => {
