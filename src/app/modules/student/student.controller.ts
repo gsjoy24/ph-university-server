@@ -5,6 +5,7 @@ import { StudentServices } from './student.service';
 
 const getAllStudent = catchAsync(async (req, res) => {
   const result = await StudentServices.getAllStudentsFromDB(req?.query);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -29,6 +30,7 @@ const updateStudent = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { studentData } = req.body;
   const result = await StudentServices.updateStudentsIntoDB(id, studentData);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

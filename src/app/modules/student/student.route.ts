@@ -13,7 +13,12 @@ route.get(
 );
 route.get(
   '/:id',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
   StudentControllers.getSingleStudent,
 );
 route.patch(

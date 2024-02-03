@@ -89,11 +89,22 @@ const getSingleStudentsFromDB = async (id: string) => {
         path: 'academicFaculty',
       },
     });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+  }
+
   return result;
 };
 
 // * update student
 const updateStudentsIntoDB = async (id: string, payload: Partial<TStudent>) => {
+  // check if student exists or not
+  const student = await Student.IsStudentExists(id);
+  if (!student) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+  }
+
   const { name, guardian, localGuardian, ...restData } = payload;
   const modifiedData: Record<string, unknown> = { ...restData };
 
@@ -123,6 +134,12 @@ const updateStudentsIntoDB = async (id: string, payload: Partial<TStudent>) => {
 
 // * delete student
 const deleteStudentsFromDB = async (id: string) => {
+  // check if student exists or not
+  const student = await Student.IsStudentExists(id);
+  if (!student) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+  }
+
   const session = await mongoose.startSession();
 
   try {
