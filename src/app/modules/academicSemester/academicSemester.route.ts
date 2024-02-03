@@ -7,11 +7,6 @@ import { AcademicSemesterValidations } from './academicSemester.validation';
 
 const route = express.Router();
 
-route.get(
-  '/',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
-  AcademicSemesterControllers.getAllAcademicSemesters,
-);
 route.post(
   '/create-academic-semester',
   auth(USER_ROLES.admin, USER_ROLES.superAdmin),
@@ -21,12 +16,30 @@ route.post(
   AcademicSemesterControllers.createAcademicSemester,
 );
 route.get(
+  '/',
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
+  AcademicSemesterControllers.getAllAcademicSemesters,
+);
+
+route.get(
   '/:id',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
   AcademicSemesterControllers.getSingleAcademicSemester,
 );
+
 route.patch(
   '/:id',
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
   validateRequest(
     AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
   ),
