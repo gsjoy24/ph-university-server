@@ -1,15 +1,12 @@
-import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
+import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import config from '../../config';
 import AppError from '../../errors/AppError';
+import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../user/user.model';
 import { TChangePassword, TLoginUser, TResetPassword } from './auth.interface';
-import config from '../../config';
 import { createToken } from './auth.utils';
-import { sendEmail } from '../../utils/sendEmai';
-import { Admin } from '../Admin/admin.model';
-import { Student } from '../student/student.model';
-import { Faculty } from '../Faculty/faculty.model';
 
 const loginUser = async (payload: TLoginUser) => {
   const { id, password } = payload;
@@ -242,27 +239,10 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
   return result;
 };
 
-const getMe = async (id: string, role: string) => {
-  let result = null;
-  if (role === 'admin') {
-    result = await Admin.findOne({ id }).populate('user');
-  } else if (role === 'student') {
-    result = await Student.findOne({ id }).populate('user');
-  } else if (role === 'faculty') {
-    result = await Faculty.findOne({ id }).populate('user');
-  }
-  if (!result) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
-  }
-
-  return result;
-};
-
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
   forgotPassword,
   resetPassword,
-  getMe,
 };

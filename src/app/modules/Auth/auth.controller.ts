@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
-import sendResponse from '../../utils/sendResponse';
-import { AuthServices } from './auth.service';
-import catchAsync from '../../utils/catchAsync';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { AuthServices } from './auth.service';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
@@ -72,22 +72,10 @@ const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
-const getMe = catchAsync(async (req, res) => {
-  const { id, role } = req.user;
-  const result = await AuthServices.getMe(id, role);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'User fetched successfully',
-    data: result,
-  });
-});
-
 export const AuthControllers = {
   loginUser,
   changePassword,
   refreshToken,
   forgotPassword,
   resetPassword,
-  getMe,
 };

@@ -42,4 +42,16 @@ router.patch(
   validateRequest(userValidations.changeUserStatusValidationSchema),
   UserControllers.changeUserStatus,
 );
+
+router.get(
+  '/me',
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
+  UserControllers.getMe,
+);
+
 export const UserRoutes = router;

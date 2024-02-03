@@ -81,7 +81,11 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       type: String,
       required: [true, 'Permanent address is required'],
     },
-    profileImg: { type: String },
+    profileImg: {
+      type: String,
+      default:
+        'https://res.cloudinary.com/dghszztcc/image/upload/v1706979424/2024010001-daniel.png',
+    },
     academicDepartment: {
       type: Schema.Types.ObjectId,
       required: [true, 'Academic department id is required'],
