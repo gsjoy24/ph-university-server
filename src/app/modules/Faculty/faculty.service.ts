@@ -60,8 +60,13 @@ const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
 };
 
 const deleteFacultyFromDB = async (id: string) => {
-  const session = await mongoose.startSession();
+  // check if faculty exists or not
+  const faculty = await Faculty.isFacultyExists(id);
+  if (!faculty) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
 
+  const session = await mongoose.startSession();
   try {
     session.startTransaction();
 

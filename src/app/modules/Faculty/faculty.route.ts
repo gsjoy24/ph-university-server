@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   '/:id',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin, USER_ROLES.faculty),
   FacultyControllers.getSingleFaculty,
 );
 router.patch(
@@ -25,7 +25,7 @@ router.delete(
 );
 router.get(
   '/',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin, USER_ROLES.faculty),
   FacultyControllers.getAllFaculties,
 );
 

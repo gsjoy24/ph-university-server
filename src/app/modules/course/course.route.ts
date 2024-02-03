@@ -23,7 +23,16 @@ route.get(
   ),
   CourseControllers.getAllCourses,
 );
-route.get('/:id', CourseControllers.getSingleCourse);
+route.get(
+  '/:id',
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
+  CourseControllers.getSingleCourse,
+);
 route.patch(
   '/:id',
   auth(USER_ROLES.admin, USER_ROLES.superAdmin),
