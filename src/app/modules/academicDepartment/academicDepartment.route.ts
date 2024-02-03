@@ -18,23 +18,23 @@ route.post(
 );
 route.get(
   '/',
-  auth(USER_ROLES.admin, USER_ROLES.faculty),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin, USER_ROLES.faculty),
   AcademicDepartmentController.getAllAcademicDepartments,
 );
 route.get(
   '/:id',
-  auth(USER_ROLES.admin, USER_ROLES.faculty),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin, USER_ROLES.faculty),
   AcademicDepartmentController.getSingleAcademicDepartment,
 );
 route.patch(
   '/:id',
-  auth(USER_ROLES.admin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
   validateRequest(UpdateAcademicDepartmentValidationSchema),
   AcademicDepartmentController.updateAcademicDepartment,
 );
 route.delete(
   '/:id',
-  auth(USER_ROLES.admin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
   AcademicDepartmentController.deleteAcademicDepartment,
 );
 

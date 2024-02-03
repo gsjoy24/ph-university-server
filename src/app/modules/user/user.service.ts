@@ -1,7 +1,13 @@
-import config from '../../config';
-import mongoose from 'mongoose';
-import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
+import config from '../../config';
+import AppError from '../../errors/AppError';
+import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
+import { TAdmin } from '../Admin/admin.interface';
+import { Admin } from '../Admin/admin.model';
+import { TFaculty } from '../Faculty/faculty.interface';
+import { Faculty } from '../Faculty/faculty.model';
+import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
@@ -13,12 +19,6 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
-import { TFaculty } from '../Faculty/faculty.interface';
-import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { Faculty } from '../Faculty/faculty.model';
-import { Admin } from '../Admin/admin.model';
-import { TAdmin } from '../Admin/admin.interface';
-import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
 
 const createStudentIntoDB = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
