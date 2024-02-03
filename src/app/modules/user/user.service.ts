@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
 import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
-import { verifyToken } from '../Auth/auth.utils';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { Faculty } from '../Faculty/faculty.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
@@ -242,23 +242,23 @@ const changeUserStatus = async (id: string, payload: { status: string }) => {
   return result;
 };
 
-const getMe = async (token: string) => {
-  const { userId, role } = verifyToken(
-    token,
-    config.jwt_access_secret as string,
-  );
+const getMe = async (user: JwtPayload) => {
+  const { role, userId } = user;
 
   let result: Record<string, unknown> | null = {};
 
   if (role === USER_ROLES.student) {
-    result = await Student.findOne({ id: userId });
-  }
-  if (role === USER_ROLES.faculty) {
-    result = await Faculty.findOne({ id: userId });
+    result = await Student.findOne({
+      id: userId,
+    }).populate('user');
+  } else if (role === USER_ROLES.faculty) {
+    result = await Faculty.findOne({
+      id: userId,
+    }).populate('user');
   } else if (role === USER_ROLES.admin) {
     result = await Admin.findOne({
       id: userId,
-    });
+    }).populate('user');
   } else if (role === USER_ROLES.superAdmin) {
     result = await User.findOne({ id: userId });
   }

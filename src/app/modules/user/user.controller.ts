@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
-import AppError from '../../errors/AppError';
+import { JwtPayload } from 'jsonwebtoken';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
@@ -66,12 +66,7 @@ const changeUserStatus: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Token not found');
-  }
-  const result = await UserServices.getMe(token);
+  const result = await UserServices.getMe(req.user as JwtPayload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
