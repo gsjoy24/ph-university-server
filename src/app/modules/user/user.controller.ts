@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
@@ -65,12 +66,17 @@ const changeUserStatus: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  const { id, role } = req.user as { id: string; role: string };
-  const result = await UserServices.getMe(id, role);
+  const token = req.headers.authorization;
+
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Token not found');
+  }
+  const result = await UserServices.getMe(token);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User fetched successfully',
+    message: 'User details fetched successfully',
     data: result,
   });
 });

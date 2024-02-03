@@ -1,5 +1,5 @@
 export type TLoginUser = {
-  id: string;
+  userId: string;
   password: string;
 };
 
@@ -9,6 +9,6 @@ export type TChangePassword = {
 };
 
 export type TResetPassword = {
-  id: string;
+  userId: string;
   newPassword: string;
 };

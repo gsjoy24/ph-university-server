@@ -6,6 +6,7 @@ import AppError from '../../errors/AppError';
 import sendImgToCloudinary from '../../utils/sendImgToCloudinary';
 import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
+import { verifyToken } from '../Auth/auth.utils';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { Faculty } from '../Faculty/faculty.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
@@ -13,7 +14,6 @@ import { TAcademicSemester } from '../academicSemester/academicSemester.interfac
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
-import { USER_ROLES } from './user.constant';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import {
@@ -241,23 +241,10 @@ const changeUserStatus = async (id: string, payload: { status: string }) => {
   return result;
 };
 
-const getMe = async (id: string, role: string) => {
-  let result = null;
-  // if (role === 'super_admin') {
-  //   result = await Admin.findOne({ id }).populate('user');
-  // } else
-  if (role === USER_ROLES.admin) {
-    result = await Admin.findOne({ id }).populate('user');
-  } else if (role === USER_ROLES.student) {
-    result = await Student.findOne({ id }).populate('user');
-  } else if (role === USER_ROLES.faculty) {
-    result = await Faculty.findOne({ id }).populate('user');
-  }
-  if (!result) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
-  }
-
-  return result;
+const getMe = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
+  const user = await User.findOne({ id: decoded.userId });
+  return user;
 };
 
 export const UserServices = {

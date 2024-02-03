@@ -9,10 +9,10 @@ import { TChangePassword, TLoginUser, TResetPassword } from './auth.interface';
 import { createToken } from './auth.utils';
 
 const loginUser = async (payload: TLoginUser) => {
-  const { id, password } = payload;
+  const { userId, password } = payload;
 
   // check if the user is exist
-  const user = await User.isUserExistsByCustomId(id);
+  const user = await User.isUserExistsByCustomId(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -38,7 +38,7 @@ const loginUser = async (payload: TLoginUser) => {
   }
 
   const jwtPayload = {
-    id: user?.id,
+    userId: user?.id,
     role: user?.role,
   };
 
@@ -47,6 +47,7 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt_access_secret as string,
     config.jwt_access_expiration as string,
   );
+
   const refreshToken = createToken(
     jwtPayload,
     config.jwt_refresh_secret as string,
@@ -96,6 +97,7 @@ const changePassword = async (
     newPassword,
     Number(config.bcrypt_salt_round),
   );
+
   const result = await User.findOneAndUpdate(
     {
       id: userData.id,
@@ -123,10 +125,10 @@ const refreshToken = async (token: string) => {
     config.jwt_refresh_secret as string,
   ) as JwtPayload;
 
-  const { id, iat } = decoded;
+  const { userId, iat } = decoded;
 
   // check if the user is exist
-  const user = await User.isUserExistsByCustomId(id);
+  const user = await User.isUserExistsByCustomId(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -149,7 +151,7 @@ const refreshToken = async (token: string) => {
   }
 
   const jwtPayload = {
-    id: user?.id,
+    userId: user?.id,
     role: user?.role,
   };
   const accessToken = createToken(
@@ -180,7 +182,7 @@ const forgotPassword = async (id: string) => {
   }
 
   const jwtPayload = {
-    id: user?.id,
+    userId: user?.id,
     role: user?.role,
   };
   const resetToken = createToken(
@@ -194,8 +196,8 @@ const forgotPassword = async (id: string) => {
 };
 
 const resetPassword = async (payload: TResetPassword, token: string) => {
-  const { id, newPassword } = payload;
-  const user = await User.isUserExistsByCustomId(id);
+  const { userId, newPassword } = payload;
+  const user = await User.isUserExistsByCustomId(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -216,7 +218,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
     config.jwt_access_secret as string,
   ) as JwtPayload;
 
-  if (decoded.id !== user?.id) {
+  if (decoded.userId !== user?.id) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized!');
   }
 
@@ -227,7 +229,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
 
   const result = await User.findOneAndUpdate(
     {
-      id: decoded.id,
+      id: decoded.userId,
       role: decoded.role,
     },
     {

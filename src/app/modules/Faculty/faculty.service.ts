@@ -26,10 +26,20 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');
 
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
+
   return result;
 };
 
 const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
+  // check if faculty exists or not
+  const faculty = await Faculty.isFacultyExists(id);
+  if (!faculty) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
+
   const { name, ...remainingFacultyData } = payload;
 
   const modifiedUpdatedData: Record<string, unknown> = {
