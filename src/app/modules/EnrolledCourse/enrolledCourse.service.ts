@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
-import AppError from '../../errors/AppError';
-import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
-import EnrolledCourse from './enrolledCourse.model';
-import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
+import AppError from '../../errors/AppError';
 import { Course } from '../course/course.model';
+import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Student } from '../student/student.model';
 import { TEnrolledCourse } from './enrolledCourse.interface';
+import EnrolledCourse from './enrolledCourse.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
@@ -161,10 +161,29 @@ const updateEnrolledCourseMarksIntoDB = async (
     student,
     offeredCourse,
     semesterRegistration,
-    // faculty: facultyId,
+    faculty: facultyId,
   });
-console.log(isTheFacultyBelongToTheCourse);
-  const result = {};
+
+  if (!isTheFacultyBelongToTheCourse) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You are not allowed to update the marks of this student',
+    );
+  }
+
+  const result = await EnrolledCourse.findOneAndUpdate(
+    {
+      student,
+      offeredCourse,
+      semesterRegistration,
+    },
+    {
+      courseMarks,
+    },
+    {
+      new: true,
+    },
+  );
   return result;
 };
 

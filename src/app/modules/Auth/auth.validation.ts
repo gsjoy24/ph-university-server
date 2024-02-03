@@ -39,7 +39,7 @@ const forgotPasswordValidationSchema = z.object({
       required_error: 'User id is required',
     }),
   }),
-})
+});
 const resetPasswordValidationSchema = z.object({
   body: z.object({
     id: z.string({
@@ -50,7 +50,7 @@ const resetPasswordValidationSchema = z.object({
       invalid_type_error: 'User password must be a string',
     }),
   }),
-})
+});
 
 export const AuthValidations = {
   LoginUserValidationSchema,

@@ -4,6 +4,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import { USER_ROLES } from '../user/user.constant';
 import { CourseControllers } from './course.controller';
 import { courseValidations } from './course.validation';
+
 const route = express.Router();
 
 route.post(

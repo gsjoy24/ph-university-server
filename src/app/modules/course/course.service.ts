@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { CourseSearchableFields } from './course.constant';
@@ -10,7 +11,6 @@ import {
   TPreRequisiteCourses,
 } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
-import mongoose from 'mongoose';
 
 const createCourseIntoDB = async (courseData: TCourse) => {
   const result = await Course.create(courseData);
