@@ -14,6 +14,7 @@ import { TAcademicSemester } from '../academicSemester/academicSemester.interfac
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
+import { USER_ROLES } from './user.constant';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import {
@@ -242,9 +243,31 @@ const changeUserStatus = async (id: string, payload: { status: string }) => {
 };
 
 const getMe = async (token: string) => {
-  const decoded = verifyToken(token, config.jwt_access_secret as string);
-  const user = await User.findOne({ id: decoded.userId });
-  return user;
+  const { userId, role } = verifyToken(
+    token,
+    config.jwt_access_secret as string,
+  );
+
+  let result: Record<string, unknown> | null = {};
+
+  if (role === USER_ROLES.student) {
+    result = await Student.findOne({ id: userId });
+  }
+  if (role === USER_ROLES.faculty) {
+    result = await Faculty.findOne({ id: userId });
+  } else if (role === USER_ROLES.admin) {
+    result = await Admin.findOne({
+      id: userId,
+    });
+  } else if (role === USER_ROLES.superAdmin) {
+    result = await User.findOne({ id: userId });
+  }
+
+  // if user not found
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return result;
 };
 
 export const UserServices = {
