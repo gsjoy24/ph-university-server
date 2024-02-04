@@ -128,18 +128,18 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
   }
 
   // current ongoing semester registration
-  const semesterRegistration = await SemesterRegistration.findOne({
+  const currentSemesterRegistration = await SemesterRegistration.findOne({
     status: 'ONGOING',
   });
 
-  if (!semesterRegistration) {
+  if (!currentSemesterRegistration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
   }
 
   const result = await OfferedCourse.aggregate([
     {
       $match: {
-        semesterRegistration: semesterRegistration?._id,
+        semesterRegistration: currentSemesterRegistration?._id,
         academicDepartment: student.academicDepartment,
         academicFaculty: student.academicFaculty,
       },
@@ -152,7 +152,54 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
         as: 'course',
       },
     },
-    
+    {
+      $unwind: '$course',
+    },
+    {
+      $lookup: {
+        from: 'enrolledcourses',
+        let: { currentSemesterRegistration: currentSemesterRegistration?._id },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: [
+                      '$semesterRegistration',
+                      '$$currentSemesterRegistration',
+                    ],
+                  },
+                  {
+                    $eq: ['$student', student?._id],
+                  },
+                  {
+                    $eq: ['$isEnrolled', true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'enrolledCourses',
+      },
+    },
+    {
+      $addFields: {
+        isAlreadyEnrolled: {
+          $in: [
+            'course._id',
+            {
+              $map: {
+                input: '$enrolledCourses',
+                as: 'enrolledCourse',
+                in: '$$enrolledCourse.course',
+              },
+            },
+          ],
+        },
+      },
+    },
   ]);
 
   return result;

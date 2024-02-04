@@ -4,9 +4,9 @@ import sendResponse from '../../utils/sendResponse';
 import EnrolledCourseServices from './enrolledCourse.service';
 
 const createEnrolledCourse = catchAsync(async (req, res) => {
-  const { id } = req.user;
+  const userId = req?.user?.userId;
   const result = await EnrolledCourseServices.createEnrolledCourseIntoDB(
-    id,
+    userId,
     req.body,
   );
 
@@ -19,7 +19,7 @@ const createEnrolledCourse = catchAsync(async (req, res) => {
 });
 
 const updateEnrolledCourseMarks = catchAsync(async (req, res) => {
-  const facultyId = (req.user as { id: string }).id;
+  const facultyId = (req.user as { userId: string }).userId;
   const result = await EnrolledCourseServices.updateEnrolledCourseMarksIntoDB(
     facultyId,
     req.body,
