@@ -6,6 +6,7 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { Course } from '../course/course.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Student } from '../student/student.model';
 import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import { HasTimeConflict } from './offeredCourse.utils';
@@ -111,7 +112,7 @@ const getAllOfferedCourseFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await offeredCourseQuery.modelQuery;
-  const meta = await offeredCourseQuery.countDocuments();
+  const meta = await offeredCourseQuery.countTotal();
 
   return {
     meta,
@@ -119,20 +120,19 @@ const getAllOfferedCourseFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const getMyOfferedCourseFromDB = async (query: Record<string, unknown>) => {
-  const offeredCourseQuery = new QueryBuilder(OfferedCourse.find(), query)
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
+const getMyOfferedCourseFromDB = async (userId: string) => {
+  // check if the user exists
+  const user = await Student.findOne({ id: userId });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
 
-  const result = await offeredCourseQuery.modelQuery;
-  const meta = await offeredCourseQuery.countDocuments();
+  // current ongoing semester registration
+  const semesterRegistration = await SemesterRegistration.findOne({
+    status: 'ONGOING',
+  });
 
-  return {
-    meta,
-    result,
-  };
+  return semesterRegistration;
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {

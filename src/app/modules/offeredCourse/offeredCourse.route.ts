@@ -20,7 +20,7 @@ router.get(
 router.get(
   '/my-offered-courses',
   auth(USER_ROLES.student),
-  OfferedCourseControllers.getAllOfferedCourses,
+  OfferedCourseControllers.getMyOfferedCourses,
 );
 router.get(
   '/:id',
