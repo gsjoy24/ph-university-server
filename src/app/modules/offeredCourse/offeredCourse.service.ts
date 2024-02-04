@@ -200,6 +200,11 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
         },
       },
     },
+    {
+      $match: {
+        isAlreadyEnrolled: false,
+      },
+    },
   ]);
 
   return result;
