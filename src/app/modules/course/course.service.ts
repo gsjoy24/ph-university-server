@@ -5,10 +5,7 @@ import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { CourseSearchableFields } from './course.constant';
-import {
-  TCourse,
-  TCourseFaculty,
-} from './course.interface';
+import { TCourse, TCourseFaculty } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
 
 const createCourseIntoDB = async (courseData: TCourse) => {
@@ -27,7 +24,8 @@ const getAllCourseFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
   const result = await CourseQuery.modelQuery;
-  return result;
+  const meta = await CourseQuery.countTotal();
+  return { meta, result };
 };
 
 const getSingleCourseFromDB = async (id: string) => {

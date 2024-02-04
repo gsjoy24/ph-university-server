@@ -18,8 +18,13 @@ router.get(
   OfferedCourseControllers.getAllOfferedCourses,
 );
 router.get(
+  '/my-offered-courses',
+  auth(USER_ROLES.student),
+  OfferedCourseControllers.getAllOfferedCourses,
+);
+router.get(
   '/:id',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(USER_ROLES.admin, USER_ROLES.superAdmin, USER_ROLES.student),
   OfferedCourseControllers.getSingleOfferedCourse,
 );
 router.patch(
