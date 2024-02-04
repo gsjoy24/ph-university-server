@@ -122,9 +122,9 @@ const getAllOfferedCourseFromDB = async (query: Record<string, unknown>) => {
 
 const getMyOfferedCourseFromDB = async (userId: string) => {
   // check if the user exists
-  const user = await Student.findOne({ id: userId });
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  const student = await Student.findOne({ id: userId });
+  if (!student) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
   }
 
   // current ongoing semester registration
@@ -132,7 +132,30 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
     status: 'ONGOING',
   });
 
-  return semesterRegistration;
+  if (!semesterRegistration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
+  }
+
+  const result = await OfferedCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: semesterRegistration?._id,
+        academicDepartment: student.academicDepartment,
+        academicFaculty: student.academicFaculty,
+      },
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
+    
+  ]);
+
+  return result;
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
