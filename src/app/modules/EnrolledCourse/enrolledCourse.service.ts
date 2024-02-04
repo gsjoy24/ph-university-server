@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
+import { Faculty } from '../Faculty/faculty.model';
 import { Course } from '../course/course.model';
 import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
@@ -137,6 +138,12 @@ const updateEnrolledCourseMarksIntoDB = async (
 ) => {
   const { student, offeredCourse, courseMarks, semesterRegistration } = payload;
 
+  // check if faculty is exists
+  const isFacultyExists = await Faculty.findOne({ id: facultyId });
+  if (!isFacultyExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found');
+  }
+
   // check if semesterRegistration is exists
   const isSemesterRegistrationExists =
     await SemesterRegistration.findById(semesterRegistration);
@@ -161,7 +168,7 @@ const updateEnrolledCourseMarksIntoDB = async (
     student,
     offeredCourse,
     semesterRegistration,
-    faculty: facultyId,
+    faculty: isFacultyExists?._id,
   });
 
   if (!isTheFacultyBelongToTheCourse) {
