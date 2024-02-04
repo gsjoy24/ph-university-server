@@ -35,10 +35,21 @@ const getSingleCourseFromDB = async (id: string) => {
   const result = await Course.findById(id).populate(
     'preRequisiteCourses.course',
   );
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+  }
+
   return result;
 };
 
 const updateCourseIntoDB = async (id: string, courseData: Partial<TCourse>) => {
+  // * checking if course exists
+  const course = await Course.findById(id);
+  if (!course) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+  }
+
   const { preRequisiteCourses, ...courseRemainingData } = courseData;
   const session = await mongoose.startSession();
 
@@ -129,6 +140,12 @@ const updateCourseIntoDB = async (id: string, courseData: Partial<TCourse>) => {
 };
 
 const deleteCourseFromDB = async (id: string) => {
+  // * checking if course exists
+  const course = await Course.findById(id);
+  if (!course) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+  }
+
   const result = await Course.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -145,11 +162,18 @@ const assignFacultiesWithCourseIntoDB = async (
 ) => {
   const result = await CourseFaculty.findByIdAndUpdate(
     id,
-    { $addToSet: { faculties: { $each: payload } } },
+    { course: id, $addToSet: { faculties: { $each: payload } } },
     {
       new: true,
       upsert: true,
     },
+  );
+  return result;
+};
+
+const getFacultiesWithCourseFromDB = async (courseId: string) => {
+  const result = await CourseFaculty.findOne({ course: courseId }).populate(
+    'faculties',
   );
   return result;
 };
@@ -161,4 +185,5 @@ export const CourseServices = {
   updateCourseIntoDB,
   deleteCourseFromDB,
   assignFacultiesWithCourseIntoDB,
+  getFacultiesWithCourseFromDB,
 };

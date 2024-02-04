@@ -39,11 +39,25 @@ route.patch(
   validateRequest(courseValidations.updateCourseValidationSchema),
   CourseControllers.updateCourse,
 );
+
 route.put(
   '/:id/assign-faculties',
   auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  validateRequest(courseValidations.facultiesWithCourseValidationSchema),
   CourseControllers.assignFacultiesWithCourse,
 );
+
+route.get(
+  '/:id/get-faculties',
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.faculty,
+    USER_ROLES.student,
+  ),
+  CourseControllers.getFacultiesWithCourse,
+);
+
 route.delete(
   '/:id',
   auth(USER_ROLES.admin, USER_ROLES.superAdmin),
