@@ -8,7 +8,6 @@ import { CourseSearchableFields } from './course.constant';
 import {
   TCourse,
   TCourseFaculty,
-  TPreRequisiteCourses,
 } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
 

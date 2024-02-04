@@ -75,5 +75,5 @@ export const courseValidations = {
   createCourseValidationSchema,
   PreRequisiteCoursesValidationSchema,
   updateCourseValidationSchema,
-  facultiesWithCourseValidationSchema
+  facultiesWithCourseValidationSchema,
 };
