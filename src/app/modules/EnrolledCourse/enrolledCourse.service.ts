@@ -174,19 +174,22 @@ const updateEnrolledCourseMarksIntoDB = async (
   if (!isTheFacultyBelongToTheCourse) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
-      'You are not allowed to update the marks of this student',
+      'You are not allowed to update the marks of this student!',
     );
   }
 
-  const result = await EnrolledCourse.findOneAndUpdate(
-    {
-      student,
-      offeredCourse,
-      semesterRegistration,
-    },
-    {
-      courseMarks,
-    },
+  const modifiedData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+
+  const result = await EnrolledCourse.findByIdAndUpdate(
+    isTheFacultyBelongToTheCourse?._id,
+    modifiedData,
     {
       new: true,
     },
