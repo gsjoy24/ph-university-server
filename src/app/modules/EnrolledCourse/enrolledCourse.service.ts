@@ -8,6 +8,7 @@ import { SemesterRegistration } from '../semesterRegistration/semesterRegistrati
 import { Student } from '../student/student.model';
 import { TEnrolledCourse } from './enrolledCourse.interface';
 import EnrolledCourse from './enrolledCourse.model';
+import calculateGradePoint from './enrolledCourse.utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
@@ -186,10 +187,8 @@ const updateEnrolledCourseMarksIntoDB = async (
     const { classTest1, classTest2, midTerm, finalTerm } =
       isTheFacultyBelongToTheCourse.courseMarks;
     const totalMarks =
-      Math.ceil(classTest1 * 0.1) +
-      Math.ceil(classTest2 * 0.1) +
-      Math.ceil(midTerm * 0.3) +
-      Math.ceil(finalTerm * 0.5);
+      classTest1 + classTest2 + midTerm + courseMarks.finalTerm;
+    const result = calculateGradePoint(totalMarks);
   }
 
   if (courseMarks && Object.keys(courseMarks).length) {
