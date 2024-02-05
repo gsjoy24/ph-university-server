@@ -186,9 +186,12 @@ const updateEnrolledCourseMarksIntoDB = async (
   if (courseMarks?.finalTerm) {
     const { classTest1, classTest2, midTerm, finalTerm } =
       isTheFacultyBelongToTheCourse.courseMarks;
-    const totalMarks =
-      classTest1 + classTest2 + midTerm + courseMarks.finalTerm;
+    const totalMarks = classTest1 + classTest2 + midTerm + finalTerm;
     const result = calculateGradePoint(totalMarks);
+    console.log('result', result);
+    modifiedData.grade = result.grade;
+    modifiedData.gradePoints = result.gradePoints;
+    modifiedData.isCompleted = true;
   }
 
   if (courseMarks && Object.keys(courseMarks).length) {
