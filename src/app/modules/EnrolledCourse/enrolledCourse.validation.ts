@@ -24,10 +24,26 @@ const updateEnrolledCourseMarksValidationZodSchema = z.object({
       invalid_type_error: 'Student must be a string',
     }),
     courseMarks: z.object({
-      classTest1: z.number().optional(),
-      midTerm: z.number().optional(),
-      classTest2: z.number().optional(),
-      finalTerm: z.number().optional(),
+      classTest1: z
+        .number({
+          invalid_type_error: 'Mark of class test 1 must be a number',
+        })
+        .optional(),
+      midTerm: z
+        .number({
+          invalid_type_error: 'Mark of mid term must be a number',
+        })
+        .optional(),
+      classTest2: z
+        .number({
+          invalid_type_error: 'Mark of class test 2 must be a number',
+        })
+        .optional(),
+      finalTerm: z
+        .number({
+          invalid_type_error: 'Mark of final term must be a number',
+        })
+        .optional(),
     }),
   }),
 });
