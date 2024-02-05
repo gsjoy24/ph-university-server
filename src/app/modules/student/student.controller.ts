@@ -4,12 +4,15 @@ import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
 const getAllStudent = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB(req?.query);
+  const { meta, result } = await StudentServices.getAllStudentsFromDB(
+    req?.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Students data retrieved successfully!',
+    meta,
     data: result,
   });
 });
