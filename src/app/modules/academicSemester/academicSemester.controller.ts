@@ -17,11 +17,13 @@ const createAcademicSemester: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicSemesters: RequestHandler = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterServices.getAllAcademicSemestersFromDB();
+  const { meta, result } =
+    await AcademicSemesterServices.getAllAcademicSemestersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Academic Semesters data retrieved successfully!',
+    meta,
     data: result,
   });
 });
