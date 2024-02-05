@@ -220,6 +220,23 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
     },
     {
       $addFields: {
+        isPreRequisiteFullFiled: {
+          $or: [
+            {
+              $eq: ['$course.preRequisiteCourses', []],
+            },
+            {
+              $setIsSubset: [
+                '$course.preRequisiteCourses.course',
+                '$completedCoursesIds',
+              ],
+            },
+          ],
+        },
+      },
+    },
+    {
+      $addFields: {
         isAlreadyEnrolled: {
           $in: [
             '$course._id',
@@ -237,6 +254,7 @@ const getMyOfferedCourseFromDB = async (userId: string) => {
     {
       $match: {
         isAlreadyEnrolled: false,
+        isPreRequisiteFullFiled: true,
       },
     },
   ]);
