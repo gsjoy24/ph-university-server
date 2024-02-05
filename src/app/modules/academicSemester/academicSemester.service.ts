@@ -20,6 +20,9 @@ const getAllAcademicSemestersFromDB = async () => {
 
 const getSingleAcademicSemesterFromDB = async (id: string) => {
   const result = await AcademicSemester.findById(id);
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic Semester not found');
+  }
   return result;
 };
 
@@ -27,6 +30,11 @@ const updateAcademicSemesterIntoDB = async (
   id: string,
   payload: Partial<TAcademicSemester>,
 ) => {
+  // check if academic semester exists
+  const academicSemester = await AcademicSemester.findById(id);
+  if (!academicSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic Semester not found');
+  }
   const result = await AcademicSemester.findByIdAndUpdate(id, payload, {
     new: true,
   });
@@ -34,6 +42,11 @@ const updateAcademicSemesterIntoDB = async (
 };
 
 const deleteAcademicSemesterFromDB = async (id: string) => {
+  // check if academic semester exists
+  const academicSemester = await AcademicSemester.findById(id);
+  if (!academicSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic Semester not found');
+  }
   const result = await AcademicSemester.findByIdAndDelete(id);
   return result;
 };
