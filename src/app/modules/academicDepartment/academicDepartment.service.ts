@@ -18,7 +18,7 @@ const getSingleAcademicDepartmentFromDB = async (id: string) => {
     await AcademicDepartment.findById(id).populate('academicFaculty');
 
   if (!result) {
-    throw new Error('Academic Department not found');
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic Department not found');
   }
   return result;
 };
