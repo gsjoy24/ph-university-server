@@ -1,7 +1,7 @@
 import { FilterQuery, Query } from 'mongoose';
 
 class QueryBuilder<T> {
-  [x: string]: any;
+  // [x: string]: any;
   public modelQuery: Query<T[], T>;
   public query: Record<string, unknown>;
   constructor(modelQuery: Query<T[], T>, query: Record<string, unknown>) {
@@ -61,6 +61,19 @@ class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.select(fields);
 
     return this;
+  }
+  async countTotal() {
+    const limit = this?.query?.limit ? Number(this?.query?.limit) : 10;
+    const page = this?.query?.page ? Number(this?.query?.page) : 1;
+    const filter = this.modelQuery.getFilter();
+    const total = await this.modelQuery.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+    return {
+      page,
+      limit,
+      totalPages,
+      total,
+    };
   }
 }
 export default QueryBuilder;
