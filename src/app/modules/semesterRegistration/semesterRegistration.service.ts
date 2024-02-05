@@ -63,13 +63,17 @@ const getAllSemesterRegistrationFromDB = async (
     .paginate()
     .fields();
   const result = await semesterRegistration.modelQuery;
-  return result;
+  const meta = await semesterRegistration.countTotal();
+  return { meta, result };
 };
 
 // ! get single semester registration
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
   const semesterRegistration =
     await SemesterRegistration.findById(id).populate('academicSemester');
+  if (!semesterRegistration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
+  }
   return semesterRegistration;
 };
 
