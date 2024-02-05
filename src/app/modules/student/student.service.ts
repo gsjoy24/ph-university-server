@@ -9,55 +9,6 @@ import { Student } from './student.model';
 
 // * get all students
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  // const searchTerm = query?.searchTerm ? query?.searchTerm : '';
-  // const queryObj = { ...query };
-
-  // // searching
-  // const searchQuery = Student.find({
-  //   $or: [
-  //     'email',
-  //     'name.firstName',
-  //     'name.lastName',
-  //     'contactNumber',
-  //     'presentAddress',
-  //   ].map((key) => ({
-  //     [key]: {
-  //       $regex: searchTerm,
-  //       $options: 'i',
-  //     },
-  //   })),
-  // });
-
-  // // filtering
-  // excludeFields.forEach((el) => delete queryObj[el]);
-  // const filteredQuery = searchQuery
-  //   .find(queryObj)
-  //   .populate('admissionSemester')
-  // .populate({
-  //   path: 'academicDepartment',
-  //   populate: {
-  //     path: 'academicFaculty',
-  //   },
-  // });
-
-  // // sorting
-  // const sort = query?.sort ? (query?.sort as string) : '-createdAt';
-  // const sortQuery = filteredQuery.sort(sort);
-
-  // //limiting
-  // const limit = query?.limit ? Number(query?.limit) : 1;
-  // const page = query?.page ? Number(query?.page) : 1;
-  // const skip = (page - 1) * limit;
-
-  // const paginateQuery = sortQuery.skip(skip);
-  // const limitingQuery = paginateQuery.limit(limit);
-
-  // // fields limiting
-  // const fields = query?.fields
-  //   ? (query?.fields as string).split(',').join(' ')
-  //   : '-__v';
-  // const fieldsQuery = await limitingQuery.select(fields);
-
   const studentQuery = new QueryBuilder(
     Student.find()
       .populate('admissionSemester')
@@ -76,7 +27,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await studentQuery.modelQuery;
-  const meta =await studentQuery.countTotal();
+  const meta = await studentQuery.countTotal();
   return { meta, result };
 };
 
