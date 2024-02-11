@@ -11,7 +11,7 @@ import { AcademicSemester } from './academicSemester.model';
 const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   const { name, code } = payload;
   if (AcademicSemesterNameCodeMapper[name] !== code) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Invalid semester code');
+    throw new AppError(httpStatus.CONFLICT, 'Invalid semester code');
   }
   const result = await AcademicSemester.create(payload);
   return result;
