@@ -9,8 +9,8 @@ const notFound = (
   return res.status(httpStatus.NOT_FOUND).json({
     success: false,
     status: httpStatus.NOT_FOUND,
-    message: 'Not Found!',
-    error: 'Not Found!',
+    message: 'API Not Found!',
+    error: 'API Not Found!',
   });
 };
 
