@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  auth(USER_ROLES.superAdmin, USER_ROLES.superAdmin),
+  auth(USER_ROLES.superAdmin, USER_ROLES.admin),
   validateRequest(AcademicFacultyValidations.academicFacultyValidationSchema),
   AcademicFacultyControllers.createAcademicFaculty,
 );
