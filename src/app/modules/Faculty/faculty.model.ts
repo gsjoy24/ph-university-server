@@ -84,7 +84,7 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
     profileImg: {
       type: String,
       default:
-        'https://res.cloudinary.com/dghszztcc/image/upload/v1706979424/2024010001-daniel.png',
+        'https://res.cloudinary.com/dghszztcc/image/upload/v1707815776/duumy-user_wmto60.png',
     },
     academicDepartment: {
       type: Schema.Types.ObjectId,

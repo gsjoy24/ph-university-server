@@ -79,7 +79,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     profileImg: {
       type: String,
       default:
-        'https://res.cloudinary.com/dghszztcc/image/upload/v1706979424/2024010001-daniel.png',
+        'https://res.cloudinary.com/dghszztcc/image/upload/v1707815776/duumy-user_wmto60.png',
     },
     isDeleted: {
       type: Boolean,

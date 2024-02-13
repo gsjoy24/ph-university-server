@@ -66,10 +66,12 @@ const createStudentIntoDB = async (
       const imgName = `${
         userData.id
       }-${payload?.name?.firstName.toLowerCase()}`;
+
       const path = file?.path as string;
       const uploadedPhoto = await sendImgToCloudinary(imgName, path);
       payload.profileImg = (uploadedPhoto as { secure_url?: string })
         ?.secure_url as string;
+      console.log('uploadedPhoto', uploadedPhoto);
     }
 
     // create a user on db
