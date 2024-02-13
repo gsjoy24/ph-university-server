@@ -85,7 +85,7 @@ const createStudentIntoDB = async (
 
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student 2');
     }
 
     await session.commitTransaction();
@@ -95,7 +95,7 @@ const createStudentIntoDB = async (
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student 3');
   }
 };
 

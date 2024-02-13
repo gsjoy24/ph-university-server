@@ -130,7 +130,7 @@ const createEnrolledCourseIntoDB = async (userId: string, payload: any) => {
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student 1');
   }
 };
 const getMyEnrolledCoursesFromDB = async (
