@@ -14,7 +14,12 @@ router.post(
 );
 router.get(
   '/',
-  auth(USER_ROLES.admin, USER_ROLES.superAdmin),
+  auth(
+    USER_ROLES.admin,
+    USER_ROLES.superAdmin,
+    USER_ROLES.student,
+    USER_ROLES.faculty,
+  ),
   OfferedCourseControllers.getAllOfferedCourses,
 );
 router.get(
