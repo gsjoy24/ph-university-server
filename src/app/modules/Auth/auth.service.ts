@@ -68,7 +68,7 @@ const changePassword = async (
   const { oldPassword, newPassword } = payload;
 
   // check if the user is exist
-  const user = await User.isUserExistsByCustomId(userData.id);
+  const user = await User.isUserExistsByCustomId(userData.userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -100,7 +100,7 @@ const changePassword = async (
 
   const result = await User.findOneAndUpdate(
     {
-      id: userData.id,
+      id: userData.userId,
       role: userData.role,
     },
     {

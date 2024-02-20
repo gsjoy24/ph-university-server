@@ -48,7 +48,7 @@ route.put(
 );
 
 route.get(
-  '/:id/get-faculties',
+  '/:id/faculties',
   auth(
     USER_ROLES.admin,
     USER_ROLES.superAdmin,
