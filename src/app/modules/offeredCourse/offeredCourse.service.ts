@@ -141,7 +141,10 @@ const getMyOfferedCourseFromDB = async (
   });
 
   if (!currentSemesterRegistration) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found');
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'There is no ongoing semester registration',
+    );
   }
 
   const aggregationQuery = [
